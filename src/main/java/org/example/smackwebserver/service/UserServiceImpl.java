@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         //创建用户，POST方法
         List<User> userList =  userRepository.findByEmail(userDTO.getEmail());
         if(!CollectionUtils.isEmpty(userList)){
-            throw new IllegalStateException("email:"+ userDTO.getEmail()+" already exists");
+            throw new IllegalStateException("邮箱: "+ userDTO.getEmail()+" 已被注册");
         }
         User user = userRepository.save(UserConverter.convertUser(userDTO));
         return user.getId();

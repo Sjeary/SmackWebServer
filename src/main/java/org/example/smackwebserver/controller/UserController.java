@@ -27,8 +27,15 @@ public class UserController {
 //    }
     @PostMapping("/api/v1/User/register")
     public Response<Long> createUser(@RequestBody UserDTO userDTO) {
-        return Response.newSuccess(userService.createUser(userDTO));
+        try {
+            // 调用服务层创建用户
+            return Response.newSuccess(userService.createUser(userDTO));
+        } catch (IllegalStateException e) {
+            // 捕获 Email 重复异常，返回失败响应
+            return Response.newFail(e.getMessage());
+        }
     }
+
 
     @PostMapping("/api/v1/User/login/ById")
     public Response<String> loginUserById(@RequestBody UserDTO userDTO) {
