@@ -68,7 +68,28 @@ public class CustomErrorController implements ErrorController {
                     "success": true<br>
                 }<br>
                 <br>
-                后端进行了跨域访问配置 成功了
+                <h3>/api/v1/TravelProduct POST:提交产品信息<br></h3>
+                request:<br>
+                {<br>
+                    "userId": 1,<br>
+                    "title": "丽江深度游",<br>
+                    "startDate": "2024-12-01",<br>
+                    "endDate": "2024-12-07",<br>
+                    "features": "感受纳西族文化，体验玉龙雪山之美",<br>
+                    "theme": "文化体验",<br>
+                    "departureLocation": "昆明",<br>
+                    "destination": "丽江",<br>
+                    "maxCapacity": 20,<br>
+                    "productType": "跟团游",<br>
+                    "price": 1999.99<br>
+                }<br>
+                response:<br>
+                {<br>
+                    "data": 4,<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                后端进行了跨域访问配置 成功了<br>
                 """;
     }
 }
