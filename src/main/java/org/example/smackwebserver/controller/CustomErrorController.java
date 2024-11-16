@@ -16,8 +16,11 @@ public class CustomErrorController implements ErrorController {
                 
                 /api/v1/User/register POST:创建账号接口<br>
                 
-                /api/v1/User/login POST:登陆接口<br>
+                /api/v1/User/login/ByEmail  POST:邮箱登陆接口<br>
                 
+                /api/v1/User/login/ById POST:Id登陆接口<br>
+                
+                后端进行了跨域访问配置测试
                 """;
     }
 }
