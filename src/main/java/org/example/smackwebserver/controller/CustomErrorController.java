@@ -20,7 +20,7 @@ public class CustomErrorController implements ErrorController {
                 
                 /api/v1/User/login/ById POST:Id登陆接口<br>
                 
-                后端进行了跨域访问配置测试
+                后端进行了跨域访问配置 成功了
                 """;
     }
 }
