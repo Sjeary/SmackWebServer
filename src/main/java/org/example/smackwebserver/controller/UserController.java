@@ -1,7 +1,6 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
-import org.example.smackwebserver.dao.User;
 import org.example.smackwebserver.dto.UserDTO;
 import org.example.smackwebserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,9 @@ public class UserController {
         return Response.newSuccess(userService.createUser(userDTO));
     }
 
-    @PostMapping("/api/v1/User/login")
-    public Response<String> loginUser(@RequestBody UserDTO userDTO) {
-        boolean isAuthenticated = userService.authenticate(userDTO);
+    @PostMapping("/api/v1/User/login/ById")
+    public Response<String> loginUserById(@RequestBody UserDTO userDTO) {
+        boolean isAuthenticated = userService.authenticateById(userDTO);
         if (isAuthenticated) {
             // 登录成功，返回一个会话令牌或成功消息
             String token = userService.generateToken(userDTO.getName());
@@ -44,4 +43,16 @@ public class UserController {
         }
     }
 
+    @PostMapping("/api/v1/User/login/ByEmail")
+    public Response<String> loginUserByEmail(@RequestBody UserDTO userDTO) {
+        boolean isAuthenticated = userService.authenticateByEmail(userDTO);
+        if (isAuthenticated) {
+            // 登录成功，返回一个会话令牌或成功消息
+            String token = userService.generateToken(userDTO.getName());
+            return Response.newSuccess(token);
+        } else {
+            // 登录失败
+            return Response.newFail("Invalid username or password");
+        }
+    }
 }

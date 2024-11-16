@@ -1,6 +1,5 @@
 package org.example.smackwebserver.service;
 
-import org.example.smackwebserver.dao.User;
 import org.example.smackwebserver.dto.UserDTO;
 
 public interface UserService
@@ -9,7 +8,9 @@ public interface UserService
 
     Long createUser(UserDTO userDTO);
 
-    boolean authenticate(UserDTO userDTO);
+    boolean authenticateById(UserDTO userDTO);
+
+    boolean authenticateByEmail(UserDTO userDTO);
 
     String generateToken(String name);
 }

@@ -35,9 +35,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticate(UserDTO userDTO) {
-        //验证用户是否密码正确（先验证用户是否存在）
-        List<User> userList = userRepository.findByName(userDTO.getName());
+    public boolean authenticateById(UserDTO userDTO) {
+        //验证用户是否密码正确（先验证用户ID是否存在）
+        List<User> userList = userRepository.findById_(userDTO.getId());
+        if (userList == null) {
+            return false; // 用户不存在
+        }
+        // 验证密码（可以用哈希验证实际场景）
+        return userList.get(0).getPasswd().equals(userDTO.getPasswd());
+    }
+
+    @Override
+    public boolean authenticateByEmail(UserDTO userDTO) {
+        //验证用户是否密码正确（先验证用户Email是否存在）
+        List<User> userList = userRepository.findByEmail(userDTO.getEmail());
         if (userList == null) {
             return false; // 用户不存在
         }
