@@ -14,8 +14,13 @@ public class UserController {
 
     @GetMapping("/api/v1/User/{id}")
     public Response<UserDTO> getUserById(@PathVariable long id) {
-        return Response.newSuccess(userService.getUserById(id)) ;
+        try {
+            return Response.newSuccess(userService.getUserById(id));
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        }
     }
+
 
     @PostMapping("/api/v1/User/register")
     public Response<Long> createUser(@RequestBody UserDTO userDTO) {

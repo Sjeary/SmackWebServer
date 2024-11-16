@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserById(long id) {
         //获取用户所有信息（不包含密码）
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User with id " + id + " not found"));
         return UserConverter.convertUser(user);
     }
 
