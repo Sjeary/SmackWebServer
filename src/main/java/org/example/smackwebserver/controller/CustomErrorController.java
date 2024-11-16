@@ -46,27 +46,28 @@ public class CustomErrorController implements ErrorController {
                     "success"<br>
                 }<br>
                 <h3>/api/v1/TravelProduct/{id} GET:用产品ID拿到产品信息<br></h3>
-                response:
-                {
-                    "data": {
-                        "id": 1,
-                        "userId": 1,
-                        "title": "丽江深度游",
-                        "startDate": "2024-12-01",
-                        "endDate": "2024-12-07",
-                        "features": "感受纳西族文化，体验玉龙雪山之美",
-                        "theme": "文化体验",
-                        "departureLocation": "昆明",
-                        "destination": "丽江",
-                        "maxCapacity": 20,
-                        "productType": "跟团游",
-                        "price": 1999.99,
-                        "createdAt": "2024-11-17",
-                        "updatedAt": "2024-11-17"
-                    },
-                    "errorMsg": null,
-                    "success": true
-                }
+                response:<br>
+                {<br>
+                    "data": {<br>
+                        "id": 1,<br>
+                        "userId": 1,<br>
+                        "title": "丽江深度游",<br>
+                        "startDate": "2024-12-01",<br>
+                        "endDate": "2024-12-07",<br>
+                        "features": "感受纳西族文化，体验玉龙雪山之美",<br>
+                        "theme": "文化体验",<br>
+                        "departureLocation": "昆明",<br>
+                        "destination": "丽江",<br>
+                        "maxCapacity": 20,<br>
+                        "productType": "跟团游",<br>
+                        "price": 1999.99,<br>
+                        "createdAt": "2024-11-17",<br>
+                        "updatedAt": "2024-11-17"<br>
+                    },<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                <br>
                 后端进行了跨域访问配置 成功了
                 """;
     }
