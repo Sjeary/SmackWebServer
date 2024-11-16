@@ -16,15 +16,7 @@ public class UserController {
     public Response<UserDTO> getUserById(@PathVariable long id) {
         return Response.newSuccess(userService.getUserById(id)) ;
     }
-//    @GetMapping("/error")
-//    public String getUserError() {
-//        return """
-//                这是404页面
-//                /api/v1/User/{id} GET:用户查询信息的接口
-//                /api/v1/User/register POST:创建账号接口
-//                /api/v1/User/login POST:登陆接口
-//                """;
-//    }
+
     @PostMapping("/api/v1/User/register")
     public Response<Long> createUser(@RequestBody UserDTO userDTO) {
         try {
