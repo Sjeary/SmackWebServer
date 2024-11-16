@@ -13,7 +13,9 @@ public class TravelProductServiceImpl implements TravelProductService {
 
     @Override
     public TravelProduct getTravelProductById(long id) {
-        TravelProduct travelProduct = travelProductRepository.findById(id).orElseThrow(RuntimeException::new);
-        return travelProduct;
+        // 如果找不到记录，抛出自定义异常或返回 null
+        return travelProductRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Travel product with id " + id + " not found"));
     }
 }
+

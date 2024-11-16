@@ -16,6 +16,13 @@ public class TravelProductController {
 
     @GetMapping("/api/v1/TravelProduct/{id}")
     public Response<TravelProduct> getTravelProduct(@PathVariable("id") long id) {
-        return Response.newSuccess(travelProductService.getTravelProductById(id));
+        try {
+            TravelProduct product = travelProductService.getTravelProductById(id);
+            return Response.newSuccess(product);
+        } catch (IllegalArgumentException e) {
+            // 捕获服务层抛出的异常并返回失败响应
+            return Response.newFail(e.getMessage());
+        }
     }
+
 }
