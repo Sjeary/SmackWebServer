@@ -32,40 +32,48 @@ public class CustomErrorController implements ErrorController {
                 }<br>
                 response:<br>
                 {<br>
-                    "data": {<br>
-                        "user": {<br>
-                            "id": 1,<br>
-                            "name": "JohnDoe",<br>
-                            "passwd": null,<br>
-                            "email": "john.doe@example.com",<br>
-                            "age": 25<br>
-                        },<br>
-                        "token": "TOKEN_JohnDoe_1699801234567"<br>
-                    },<br>
-                    "errorMsg": null,<br>
-                    "success": true<br>
-                }<br>
+                         "data": {<br>
+                             "user": {<br>
+                                 "id": 1,<br>
+                                 "name": "postman",<br>
+                                 "email": "postman@email.com",<br>
+                                 "companyName": null,<br>
+                                 "companyIntroduction": null,<br>
+                                 "registerTime": "2024-11-17T21:38:25",<br>
+                                 "homepageLink": null,<br>
+                                 "passwd": null<br>
+                             },<br>
+                             "token": "TOKEN_null_1731861809939"<br>
+                         },<br>
+                         "errorMsg": null,<br>
+                         "success": true<br>
+                     }<br>
                 
-                <h3>/api/v1/User/login/ById POST:Id登陆接口<br></h3>
+                
+                <h3>/api/v1/User/login/ById POST:Id登陆接口<br></h3><br>
                 request:{<br>
                     "id"<br>
                     "passwd"<br>
                 }<br>
                 response:<br>
                 {<br>
-                    "data": {<br>
-                        "user": {<br>
-                            "id": 1,<br>
-                            "name": "JohnDoe",<br>
-                            "passwd": null,<br>
-                            "email": "john.doe@example.com",<br>
-                            "age": 25<br>
-                        },<br>
-                        "token": "TOKEN_JohnDoe_1699801234567"<br>
-                    },<br>
-                    "errorMsg": null,<br>
-                    "success": true<br>
-                }<br>
+                         "data": {<br>
+                             "user": {<br>
+                                 "id": 1,<br>
+                                 "name": "postman",<br>
+                                 "email": "postman@email.com",<br>
+                                 "companyName": null,<br>
+                                 "companyIntroduction": null,<br>
+                                 "registerTime": "2024-11-17T21:38:25",<br>
+                                 "homepageLink": null,<br>
+                                 "passwd": null<br>
+                             },<br>
+                             "token": "TOKEN_null_1731861809939"<br>
+                         },<br>
+                         "errorMsg": null,<br>
+                         "success": true<br>
+                     }<br>
+                
                 
                 <h3>/api/v1/TravelProduct/{id} GET:用产品ID拿到产品信息<br></h3>
                 response:<br>

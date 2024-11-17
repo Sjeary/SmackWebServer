@@ -40,8 +40,8 @@ public class UserController {
         boolean isAuthenticated = userService.authenticateById(userDTO);
         if (isAuthenticated) {
             // 登录成功，生成 token 并返回用户信息和 token
-            String token = userService.generateToken(userDTO.getName());
             UserDTO fullUserInfo = userService.getUserById(userDTO.getId());
+            String token = userService.generateToken(fullUserInfo);
             LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
             return Response.newSuccess(loginResponse);
         } else {
@@ -56,8 +56,8 @@ public class UserController {
         boolean isAuthenticated = userService.authenticateByEmail(userDTO);
         if (isAuthenticated) {
             // 登录成功，生成 token 并返回用户信息和 token
-            String token = userService.generateToken(userDTO.getName());
             UserDTO fullUserInfo = userService.getUserByEmail(userDTO.getEmail());
+            String token = userService.generateToken(fullUserInfo);
             LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
             return Response.newSuccess(loginResponse);
         } else {

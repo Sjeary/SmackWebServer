@@ -57,9 +57,9 @@ public class UserServiceImpl implements UserService {
     }
 
     // 生成会话令牌（可以用 JWT 或其他方式）
-    public String generateToken(String name) {
+    public String generateToken(UserDTO userDTO) {
         // 这里是简单返回一个伪令牌，实际中可以使用 JWT
-        return "TOKEN_" + name + "_" + System.currentTimeMillis();
+        return "TOKEN_" + userDTO.getName() + "_" + System.currentTimeMillis();
     }
 
     @Override

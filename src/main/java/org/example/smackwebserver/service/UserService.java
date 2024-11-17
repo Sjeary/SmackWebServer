@@ -12,7 +12,7 @@ public interface UserService
 
     boolean authenticateByEmail(UserDTO userDTO);
 
-    String generateToken(String name);
+    String generateToken(UserDTO userDTO);
 
     UserDTO getUserByEmail(String email);
 }
