@@ -2,6 +2,9 @@ package org.example.smackwebserver.dao;
 
 import jakarta.persistence.*;
 
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -18,15 +21,45 @@ public class User {
     private String passwd;
     @Column(name = "email")
     private String email;
-    @Column(name = "age")
-    private int age;
+    @Column(name= "company_name")
+    private String companyName;
+    @Column(name="company_introduction")
+    private String companyIntroduction;
+    @Column(name="register_time")
+    private LocalDateTime registerTime;
+    @Column(name="homepage_link")
+    private String homepageLink;
 
-    public int getAge() {
-        return age;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCompanyIntroduction() {
+        return companyIntroduction;
+    }
+
+    public void setCompanyIntroduction(String companyIntroduction) {
+        this.companyIntroduction = companyIntroduction;
+    }
+
+    public LocalDateTime getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(LocalDateTime registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public String getHomepageLink() {
+        return homepageLink;
+    }
+
+    public void setHomepageLink(String homepageLink) {
+        this.homepageLink = homepageLink;
     }
 
     public String getEmail() {

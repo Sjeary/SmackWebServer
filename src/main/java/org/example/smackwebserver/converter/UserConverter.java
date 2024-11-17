@@ -10,6 +10,10 @@ public class UserConverter {
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
+        userDTO.setCompanyName(user.getCompanyName());
+        userDTO.setCompanyIntroduction(user.getCompanyIntroduction());
+        userDTO.setHomepageLink(user.getHomepageLink());
+        userDTO.setRegisterTime(user.getRegisterTime());
         return userDTO;
     }
     public static User convertUser(UserDTO userDTO)
@@ -17,8 +21,11 @@ public class UserConverter {
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
-        user.setAge(userDTO.getAge());
         user.setPasswd(userDTO.getPasswd());
+        user.setCompanyName(userDTO.getCompanyName());
+        user.setCompanyIntroduction(userDTO.getCompanyIntroduction());
+        user.setHomepageLink(userDTO.getHomepageLink());
+        user.setRegisterTime(userDTO.getRegisterTime());
         return user;
     }
 }
