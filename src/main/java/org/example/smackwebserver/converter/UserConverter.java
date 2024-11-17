@@ -3,6 +3,8 @@ package org.example.smackwebserver.converter;
 import org.example.smackwebserver.dao.User;
 import org.example.smackwebserver.dto.UserDTO;
 
+import java.time.LocalDateTime;
+
 public class UserConverter {
     public static UserDTO convertUser(User user)
     {
@@ -25,7 +27,7 @@ public class UserConverter {
         user.setCompanyName(userDTO.getCompanyName());
         user.setCompanyIntroduction(userDTO.getCompanyIntroduction());
         user.setHomepageLink(userDTO.getHomepageLink());
-        user.setRegisterTime(userDTO.getRegisterTime());
+        user.setRegisterTime(LocalDateTime.now());
         return user;
     }
 }
