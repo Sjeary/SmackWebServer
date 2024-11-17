@@ -6,9 +6,10 @@ import org.example.smackwebserver.service.TravelProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class TravelProductController {
-
     @Autowired
     private TravelProductService travelProductService;
 
@@ -60,6 +61,24 @@ public class TravelProductController {
             return Response.newFail(e.getMessage());
         } catch (Exception e) {
             return Response.newFail("Failed to delete travel product: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/api/v1/TravelProduct/search")
+    public Response<List<TravelProduct>> searchTravelProducts(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String productType,
+            @RequestParam(required = false) String theme,
+            @RequestParam(required = false) String departureLocation,
+            @RequestParam(required = false) String destination,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            List<TravelProduct> products = travelProductService.searchTravelProducts(
+                    userId, productType, theme, departureLocation, destination, page, size);
+            return Response.newSuccess(products);
+        } catch (Exception e) {
+            return Response.newFail("Failed to search travel products: " + e.getMessage());
         }
     }
 

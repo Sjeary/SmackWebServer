@@ -168,6 +168,25 @@ public class CustomErrorController implements ErrorController {
                     "success": false<br>
                 }<br>
                 
+                <h3> /api/v1/TravelProduct/search  GET:通过筛选得到travel Product  </h3>
+                使用场景：主页筛选符合条件的产品/用户列表展示自己所有发布的信息。
+                GET方法，可选参数：
+                userId  发布者的用户 ID
+                productType 产品类型
+                theme  产品主题
+                departureLocation 出发地
+                destination 目的地
+                page 分页页码，默认 0（第 1 页）
+                size 每页显示的数量，默认 10
+                不带参数：返回所有结果
+                带参数 ： 例如： GET /api/v1/TravelProduct/search?page=0&size=10
+                例如： GET /api/v1/TravelProduct/search?userId=1&productType=豪华跟团游&page=0&size=10
+                返回结果：
+                {
+                    "data": [ ... ], // 筛选后的数据
+                    "errorMsg": null,
+                    "success": true
+                }
                 
                 后端进行了跨域访问配置 成功了<br>
                 """;

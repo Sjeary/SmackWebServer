@@ -3,10 +3,15 @@ package org.example.smackwebserver.service;
 import org.example.smackwebserver.dao.TravelProduct;
 import org.example.smackwebserver.dao.TravelProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TravelProductServiceImpl implements TravelProductService {
@@ -78,8 +83,8 @@ public class TravelProductServiceImpl implements TravelProductService {
         }
 
         // 保存到数据库
-        travelProduct.setCreatedAt(LocalDate.now());
-        travelProduct.setUpdatedAt(LocalDate.now());
+        travelProduct.setCreatedAt(LocalDateTime.now());
+        travelProduct.setUpdatedAt(LocalDateTime.now());
         TravelProduct savedProduct = travelProductRepository.save(travelProduct);
 
         // 返回产品 ID
@@ -125,7 +130,7 @@ public class TravelProductServiceImpl implements TravelProductService {
         }
 
         // 更新更新时间
-        existingProduct.setUpdatedAt(LocalDate.now());
+        existingProduct.setUpdatedAt(LocalDateTime.now());
 
         // 保存更新后的产品
         travelProductRepository.save(existingProduct);
@@ -143,6 +148,11 @@ public class TravelProductServiceImpl implements TravelProductService {
         travelProductRepository.deleteById(id);
     }
 
-
+    @Override
+    public List<TravelProduct> searchTravelProducts(Integer userId, String productType, String theme,
+                                                    String departureLocation, String destination, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return travelProductRepository.searchTravelProducts(userId, productType, theme, departureLocation, destination, pageable);
+    }
 }
 

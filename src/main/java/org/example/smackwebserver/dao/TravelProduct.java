@@ -3,6 +3,7 @@ package org.example.smackwebserver.dao;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "travel_product")
@@ -47,10 +48,7 @@ public class TravelProduct {
     private BigDecimal price; // 产品价格
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate createdAt; // 创建时间
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDate updatedAt; // 更新时间
+    private LocalDateTime createdAt; // 创建时间
 
     public int getId() {
         return id;
@@ -148,19 +146,24 @@ public class TravelProduct {
         this.price = price;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt; // 更新时间
+
+
 }
