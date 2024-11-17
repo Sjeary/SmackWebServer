@@ -1,6 +1,7 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
+import org.example.smackwebserver.dto.LoginResponse;
 import org.example.smackwebserver.dto.UserDTO;
 import org.example.smackwebserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +36,34 @@ public class UserController {
 
 
     @PostMapping("/api/v1/User/login/ById")
-    public Response<String> loginUserById(@RequestBody UserDTO userDTO) {
+    public Response<LoginResponse> loginUserById(@RequestBody UserDTO userDTO) {
         boolean isAuthenticated = userService.authenticateById(userDTO);
         if (isAuthenticated) {
-            // 登录成功，返回一个会话令牌或成功消息
+            // 登录成功，生成 token 并返回用户信息和 token
             String token = userService.generateToken(userDTO.getName());
-            return Response.newSuccess(token);
+            UserDTO fullUserInfo = userService.getUserById(userDTO.getId());
+            LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
+            return Response.newSuccess(loginResponse);
         } else {
             // 登录失败
             return Response.newFail("Invalid username or password");
         }
     }
 
+
     @PostMapping("/api/v1/User/login/ByEmail")
-    public Response<String> loginUserByEmail(@RequestBody UserDTO userDTO) {
+    public Response<LoginResponse> loginUserByEmail(@RequestBody UserDTO userDTO) {
         boolean isAuthenticated = userService.authenticateByEmail(userDTO);
         if (isAuthenticated) {
-            // 登录成功，返回一个会话令牌或成功消息
+            // 登录成功，生成 token 并返回用户信息和 token
             String token = userService.generateToken(userDTO.getName());
-            return Response.newSuccess(token);
+            UserDTO fullUserInfo = userService.getUserByEmail(userDTO.getEmail());
+            LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
+            return Response.newSuccess(loginResponse);
         } else {
             // 登录失败
-            return Response.newFail("Invalid username or password");
+            return Response.newFail("Invalid email or password");
         }
     }
+
 }

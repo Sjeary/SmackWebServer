@@ -13,4 +13,6 @@ public interface UserService
     boolean authenticateByEmail(UserDTO userDTO);
 
     String generateToken(String name);
+
+    UserDTO getUserByEmail(String email);
 }

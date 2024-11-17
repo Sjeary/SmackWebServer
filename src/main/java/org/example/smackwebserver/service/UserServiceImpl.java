@@ -62,5 +62,19 @@ public class UserServiceImpl implements UserService {
         return "TOKEN_" + name + "_" + System.currentTimeMillis();
     }
 
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        List<User> users = userRepository.findByEmail(email);
+
+        if (users.isEmpty()) {
+            throw new IllegalArgumentException("User with email " + email + " not found");
+        }
+
+        // 假设每个邮箱唯一，取列表第一个元素
+        User user = users.get(0);
+
+        return UserConverter.convertUser(user);
+    }
+
 
 }

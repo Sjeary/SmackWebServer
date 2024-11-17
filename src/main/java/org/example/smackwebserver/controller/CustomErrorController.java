@@ -30,21 +30,43 @@ public class CustomErrorController implements ErrorController {
                     "email"<br>
                     "passwd"<br>
                 }<br>
-                response:{<br>
-                    "data":(如果success，是生成的token)<br>
-                    "errorMsg"<br>
-                    "success"<br>
-                }
+                response:<br>
+                {<br>
+                    "data": {<br>
+                        "user": {<br>
+                            "id": 1,<br>
+                            "name": "JohnDoe",<br>
+                            "passwd": null,<br>
+                            "email": "john.doe@example.com",<br>
+                            "age": 25<br>
+                        },<br>
+                        "token": "TOKEN_JohnDoe_1699801234567"<br>
+                    },<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                
                 <h3>/api/v1/User/login/ById POST:Id登陆接口<br></h3>
                 request:{<br>
                     "id"<br>
                     "passwd"<br>
                 }<br>
-                response:{<br>
-                    "data":(如果success，是生成的token)<br>
-                    "errorMsg"<br>
-                    "success"<br>
+                response:<br>
+                {<br>
+                    "data": {<br>
+                        "user": {<br>
+                            "id": 1,<br>
+                            "name": "JohnDoe",<br>
+                            "passwd": null,<br>
+                            "email": "john.doe@example.com",<br>
+                            "age": 25<br>
+                        },<br>
+                        "token": "TOKEN_JohnDoe_1699801234567"<br>
+                    },<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
                 }<br>
+                
                 <h3>/api/v1/TravelProduct/{id} GET:用产品ID拿到产品信息<br></h3>
                 response:<br>
                 {<br>
