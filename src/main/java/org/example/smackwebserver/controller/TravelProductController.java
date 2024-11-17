@@ -36,5 +36,31 @@ public class TravelProductController {
             return Response.newFail("Failed to create travel product: " + e.getMessage());
         }
     }
+    @PutMapping("/api/v1/TravelProduct/{id}")
+    public Response<Long> updateTravelProduct(
+            @PathVariable("id") long id,
+            @RequestBody TravelProduct travelProduct) {
+        try {
+            travelProduct.setId((int) id); // 确保更新的产品 ID 是正确的
+            Long updatedId = travelProductService.updateTravelProduct(travelProduct);
+            return Response.newSuccess(updatedId);
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        } catch (Exception e) {
+            return Response.newFail("Failed to update travel product: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/api/v1/TravelProduct/{id}")
+    public Response<Long> deleteTravelProduct(@PathVariable("id") long id) {
+        try {
+            travelProductService.deleteTravelProductById(id);
+            return Response.newSuccess(id);
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        } catch (Exception e) {
+            return Response.newFail("Failed to delete travel product: " + e.getMessage());
+        }
+    }
 
 }

@@ -89,6 +89,64 @@ public class CustomErrorController implements ErrorController {
                     "errorMsg": null,<br>
                     "success": true<br>
                 }<br>
+                <h3>/api/v1/TravelProduct/{id} PUT: 更新产品信息</h3><br>
+                请求 URL:<br>
+                PUT /api/v1/TravelProduct/{id}<br>
+                请求参数：<br>
+                id（路径参数）：需要更新的产品 ID。<br>
+                请求体（JSON 格式）：<br>
+                {<br>
+                    "title": "丽江深度游升级版",<br>
+                    "startDate": "2024-12-10",<br>
+                    "endDate": "2024-12-15",<br>
+                    "features": "升级住宿标准，体验玉龙雪山雪橇滑雪",<br>
+                    "theme": "豪华体验",<br>
+                    "departureLocation": "昆明",<br>
+                    "destination": "丽江",<br>
+                    "maxCapacity": 15,<br>
+                    "productType": "豪华跟团游",<br>
+                    "price": 2999.99<br>
+                }<br>
+                说明：<br>
+                
+                id 为路径参数，用于指定更新的产品。<br>
+                请求体中需要包含需要更新的字段，未传递的字段将保持原值。<br>
+                <br>
+                响应:<br>
+                成功响应：<br>
+                {<br>
+                    "data": 1, // 表示被更新的产品 ID<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                失败响应:<br>
+                {<br>
+                    "data": null,<br>
+                    "errorMsg": "Travel product with ID 1 does not exist",<br>
+                    "success": false<br>
+                }<br>
+                
+                <h3>/api/v1/TravelProduct/{id} DELETE: 删除产品信息</h3><br>
+                请求<br>
+                请求 URL:<br>
+                DELETE /api/v1/TravelProduct/{id}<br>
+                请求参数：<br>
+                id（路径参数）：需要删除的产品 ID。<br>
+                响应<br>
+                成功响应:<br>
+                {<br>
+                    "data": 1,<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                失败相应：<br>
+                {<br>
+                    "data": null,<br>
+                    "errorMsg": "Travel product with ID 1 does not exist",<br>
+                    "success": false<br>
+                }<br>
+                
+                
                 后端进行了跨域访问配置 成功了<br>
                 """;
     }

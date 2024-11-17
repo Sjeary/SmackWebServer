@@ -6,4 +6,8 @@ public interface TravelProductService {
     TravelProduct getTravelProductById(long id);
 
     Long createTravelProduct(TravelProduct travelProduct);
+
+    Long updateTravelProduct(TravelProduct travelProduct);
+
+    void deleteTravelProductById(long id);
 }

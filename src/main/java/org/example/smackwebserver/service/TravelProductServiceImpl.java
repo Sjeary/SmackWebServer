@@ -85,5 +85,64 @@ public class TravelProductServiceImpl implements TravelProductService {
         // 返回产品 ID
         return (long) savedProduct.getId();
     }
+
+    @Override
+    public Long updateTravelProduct(TravelProduct travelProduct) {
+        // 检查是否存在指定 ID 的产品
+        TravelProduct existingProduct = travelProductRepository.findById((long)travelProduct.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Travel product with ID " + travelProduct.getId() + " does not exist"));
+
+        // 更新非空字段
+        if (travelProduct.getTitle() != null) {
+            existingProduct.setTitle(travelProduct.getTitle());
+        }
+        if (travelProduct.getStartDate() != null) {
+            existingProduct.setStartDate(travelProduct.getStartDate());
+        }
+        if (travelProduct.getEndDate() != null) {
+            existingProduct.setEndDate(travelProduct.getEndDate());
+        }
+        if (travelProduct.getFeatures() != null) {
+            existingProduct.setFeatures(travelProduct.getFeatures());
+        }
+        if (travelProduct.getTheme() != null) {
+            existingProduct.setTheme(travelProduct.getTheme());
+        }
+        if (travelProduct.getDepartureLocation() != null) {
+            existingProduct.setDepartureLocation(travelProduct.getDepartureLocation());
+        }
+        if (travelProduct.getDestination() != null) {
+            existingProduct.setDestination(travelProduct.getDestination());
+        }
+        if (travelProduct.getMaxCapacity() > 0) { // 假设负值无意义
+            existingProduct.setMaxCapacity(travelProduct.getMaxCapacity());
+        }
+        if (travelProduct.getPrice() != null && travelProduct.getPrice().compareTo(BigDecimal.ZERO) > 0) {
+            existingProduct.setPrice(travelProduct.getPrice());
+        }
+        if (travelProduct.getProductType() != null) {
+            existingProduct.setProductType(travelProduct.getProductType());
+        }
+
+        // 更新更新时间
+        existingProduct.setUpdatedAt(LocalDate.now());
+
+        // 保存更新后的产品
+        travelProductRepository.save(existingProduct);
+
+        return (long) existingProduct.getId();
+    }
+
+    @Override
+    public void deleteTravelProductById(long id) {
+        if (!travelProductRepository.existsById(id)) {
+            throw new IllegalArgumentException("Travel product with ID " + id + " does not exist");
+        }
+
+        // 删除产品
+        travelProductRepository.deleteById(id);
+    }
+
+
 }
 
