@@ -95,7 +95,7 @@ public class CustomErrorController implements ErrorController {
                     "data": {<br>
                         "id": 1,<br>
                         "userId": 1,<br>
-                        "title": "丽江深度游",<br>
+                        "replyId": "丽江深度游",<br>
                         "startDate": "2024-12-01",<br>
                         "endDate": "2024-12-07",<br>
                         "features": "感受纳西族文化，体验玉龙雪山之美",<br>
@@ -116,7 +116,7 @@ public class CustomErrorController implements ErrorController {
                 request:<br>
                 {<br>
                     "userId": 1,<br>
-                    "title": "丽江深度游",<br>
+                    "replyId": "丽江深度游",<br>
                     "startDate": "2024-12-01",<br>
                     "endDate": "2024-12-07",<br>
                     "features": "感受纳西族文化，体验玉龙雪山之美",<br>
@@ -140,7 +140,7 @@ public class CustomErrorController implements ErrorController {
                 id（路径参数）：需要更新的产品 ID。<br>
                 请求体（JSON 格式）：<br>
                 {<br>
-                    "title": "丽江深度游升级版",<br>
+                    "replyId": "丽江深度游升级版",<br>
                     "startDate": "2024-12-10",<br>
                     "endDate": "2024-12-15",<br>
                     "features": "升级住宿标准，体验玉龙雪山雪橇滑雪",<br>
