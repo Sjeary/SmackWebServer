@@ -3,6 +3,7 @@ package org.example.smackwebserver.service;
 import org.example.smackwebserver.dao.TravelProduct;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TravelProductService {
     TravelProduct getTravelProductById(long id);
@@ -13,5 +14,5 @@ public interface TravelProductService {
 
     void deleteTravelProductById(long id);
 
-    List<TravelProduct> searchTravelProducts(Integer userId, String productType, String theme, String departureLocation, String destination, int page, int size);
+    Map<String, Object> searchTravelProducts(Integer userId, String productType, String theme, String departureLocation, String destination, int page, int size);
 }

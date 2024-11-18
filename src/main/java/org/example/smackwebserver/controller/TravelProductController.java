@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TravelProductController {
@@ -65,7 +66,7 @@ public class TravelProductController {
     }
 
     @GetMapping("/api/v1/TravelProduct/search")
-    public Response<List<TravelProduct>> searchTravelProducts(
+    public Response<Map<String, Object>> searchTravelProducts(
             @RequestParam(required = false) Integer userId,
             @RequestParam(required = false) String productType,
             @RequestParam(required = false) String theme,
@@ -74,12 +75,13 @@ public class TravelProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         try {
-            List<TravelProduct> products = travelProductService.searchTravelProducts(
+            Map<String, Object> result = travelProductService.searchTravelProducts(
                     userId, productType, theme, departureLocation, destination, page, size);
-            return Response.newSuccess(products);
+            return Response.newSuccess(result);
         } catch (Exception e) {
             return Response.newFail("Failed to search travel products: " + e.getMessage());
         }
     }
+
 
 }
