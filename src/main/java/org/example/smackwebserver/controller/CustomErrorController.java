@@ -73,6 +73,20 @@ public class CustomErrorController implements ErrorController {
                          "errorMsg": null,<br>
                          "success": true<br>
                      }<br>
+                <h3> /api/v1/User/{id} PUT:更新用户信息，其中不传入相关字段的话就不更新 </h3><br>
+                Content-Type: application/json<br>
+                request:<br>
+                {<br>
+                    "name": "新名字",<br>
+                    "email": "newemail@example.com",<br>
+                    "companyName": "新公司名称"<br>
+                }<br>
+                response:<br>
+                {<br>
+                    "data": 1,<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
                 
                 
                 <h3>/api/v1/TravelProduct/{id} GET:用产品ID拿到产品信息<br></h3>
