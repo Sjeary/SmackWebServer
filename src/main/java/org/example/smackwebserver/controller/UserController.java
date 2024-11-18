@@ -1,6 +1,7 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
+import org.example.smackwebserver.dao.User;
 import org.example.smackwebserver.dto.LoginResponse;
 import org.example.smackwebserver.dto.UserDTO;
 import org.example.smackwebserver.service.UserService;
@@ -63,6 +64,21 @@ public class UserController {
         } else {
             // 登录失败
             return Response.newFail("Invalid email or password");
+        }
+    }
+
+    @PutMapping("/api/v1/User/{id}")
+    public Response<Long> updateUser(
+            @PathVariable("id") long id,
+            @RequestBody User user) {
+        try {
+            user.setId(id); // 确保用户 ID 是正确的
+            Long updatedId = userService.updateUser(user);
+            return Response.newSuccess(updatedId);
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        } catch (Exception e) {
+            return Response.newFail("Failed to update user: " + e.getMessage());
         }
     }
 

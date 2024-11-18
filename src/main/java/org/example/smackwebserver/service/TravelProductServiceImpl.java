@@ -3,6 +3,7 @@ package org.example.smackwebserver.service;
 import org.example.smackwebserver.dao.TravelProduct;
 import org.example.smackwebserver.dao.TravelProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TravelProductServiceImpl implements TravelProductService {
@@ -45,9 +48,6 @@ public class TravelProductServiceImpl implements TravelProductService {
         }
         if (travelProduct.getDestination() == null || travelProduct.getDestination().trim().isEmpty()) {
             throw new IllegalArgumentException("Destination cannot be empty");
-        }
-        if (travelProduct.getDepartureLocation().equalsIgnoreCase(travelProduct.getDestination())) {
-            throw new IllegalArgumentException("Departure location and destination cannot be the same");
         }
         if (travelProduct.getDepartureLocation().length() > 100 || travelProduct.getDestination().length() > 100) {
             throw new IllegalArgumentException("Location fields cannot exceed 100 characters");
@@ -149,10 +149,18 @@ public class TravelProductServiceImpl implements TravelProductService {
     }
 
     @Override
-    public List<TravelProduct> searchTravelProducts(Integer userId, String productType, String theme,
+    public Map<String, Object> searchTravelProducts(Integer userId, String productType, String theme,
                                                     String departureLocation, String destination, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return travelProductRepository.searchTravelProducts(userId, productType, theme, departureLocation, destination, pageable);
+        Page<TravelProduct> productPage = travelProductRepository.searchTravelProducts(
+                userId, productType, theme, departureLocation, destination, pageable);
+
+        // 将数据与总记录数封装为 Map 返回
+        Map<String, Object> result = new HashMap<>();
+        result.put("total_item", productPage.getTotalElements()); // 总记录数
+        result.put("data", productPage.getContent()); // 当前页的数据
+
+        return result;
     }
 }
 

@@ -73,6 +73,20 @@ public class CustomErrorController implements ErrorController {
                          "errorMsg": null,<br>
                          "success": true<br>
                      }<br>
+                <h3> /api/v1/User/{id} PUT:更新用户信息，其中不传入相关字段的话就不更新 </h3><br>
+                Content-Type: application/json<br>
+                request:<br>
+                {<br>
+                    "name": "新名字",<br>
+                    "email": "newemail@example.com",<br>
+                    "companyName": "新公司名称"<br>
+                }<br>
+                response:<br>
+                {<br>
+                    "data": 1,<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
                 
                 
                 <h3>/api/v1/TravelProduct/{id} GET:用产品ID拿到产品信息<br></h3>
@@ -191,10 +205,31 @@ public class CustomErrorController implements ErrorController {
                 例如： GET /api/v1/TravelProduct/search?userId=1&productType=豪华跟团游&page=0&size=10<br>
                 返回结果：<br>
                 {<br>
-                    "data": [ ... ], // 筛选后的数据<br>
+                    "data": {<br>
+                        "total_item": 25, // 总记录数<br>
+                        "data": [<br>
+                            {<br>
+                                "id": 101,<br>
+                                "userId": 1,<br>
+                                "title": "丽江深度游升级版",<br>
+                                "startDate": "2024-12-10",<br>
+                                "endDate": "2024-12-15",<br>
+                                "features": "升级住宿标准，体验玉龙雪山雪橇滑雪",<br>
+                                "theme": "豪华体验",<br>
+                                "departureLocation": "昆明",<br>
+                                "destination": "丽江",<br>
+                                "maxCapacity": 15,<br>
+                                "productType": "豪华跟团游",<br>
+                                "price": 2999.99,<br>
+                                "createdAt": "2024-11-17",<br>
+                                "updatedAt": "2024-11-17"<br>
+                            }<br>
+                        ]<br>
+                    },<br>
                     "errorMsg": null,<br>
                     "success": true<br>
                 }<br>
+                
                 
                 后端进行了跨域访问配置 成功了<br>
                 """;

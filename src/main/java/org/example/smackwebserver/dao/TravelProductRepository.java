@@ -1,5 +1,6 @@
 package org.example.smackwebserver.dao;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ public interface TravelProductRepository extends JpaRepository<TravelProduct,Lon
             "(:theme IS NULL OR tp.theme = :theme) AND " +
             "(:departureLocation IS NULL OR tp.departureLocation = :departureLocation) AND " +
             "(:destination IS NULL OR tp.destination = :destination)")
-    List<TravelProduct> searchTravelProducts(@Param("userId") Integer userId,
+    Page<TravelProduct> searchTravelProducts(@Param("userId") Integer userId,
                                              @Param("productType") String productType,
                                              @Param("theme") String theme,
                                              @Param("departureLocation") String departureLocation,

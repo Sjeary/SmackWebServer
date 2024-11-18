@@ -76,5 +76,38 @@ public class UserServiceImpl implements UserService {
         return UserConverter.convertUser(user);
     }
 
+    @Override
+    public Long updateUser(User user) {
+        // 查询数据库中的用户信息
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + user.getId() + " not found"));
+
+        // 更新字段，如果传输的字段为 null，则保留原值
+        if (user.getName() != null) {
+            existingUser.setName(user.getName());
+        }
+        if (user.getPasswd() != null) {
+            existingUser.setPasswd(user.getPasswd());
+        }
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        if (user.getCompanyName() != null) {
+            existingUser.setCompanyName(user.getCompanyName());
+        }
+        if (user.getCompanyIntroduction() != null) {
+            existingUser.setCompanyIntroduction(user.getCompanyIntroduction());
+        }
+        if (user.getHomepageLink() != null) {
+            existingUser.setHomepageLink(user.getHomepageLink());
+        }
+
+
+        // 保存更新后的用户信息
+        User updatedUser = userRepository.save(existingUser);
+
+        return updatedUser.getId();
+    }
+
 
 }
