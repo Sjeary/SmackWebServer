@@ -46,9 +46,6 @@ public class TravelProductServiceImpl implements TravelProductService {
         if (travelProduct.getDestination() == null || travelProduct.getDestination().trim().isEmpty()) {
             throw new IllegalArgumentException("Destination cannot be empty");
         }
-        if (travelProduct.getDepartureLocation().equalsIgnoreCase(travelProduct.getDestination())) {
-            throw new IllegalArgumentException("Departure location and destination cannot be the same");
-        }
         if (travelProduct.getDepartureLocation().length() > 100 || travelProduct.getDestination().length() > 100) {
             throw new IllegalArgumentException("Location fields cannot exceed 100 characters");
         }
