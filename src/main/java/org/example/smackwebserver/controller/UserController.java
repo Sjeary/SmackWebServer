@@ -39,7 +39,7 @@ public class UserController {
             return Response.newSuccess(token);
         } else {
             // 登录失败
-            return Response.newFail("Invalid username or password");
+            return Response.newFail("Invalid UserID or password");
         }
     }
 
@@ -52,7 +52,7 @@ public class UserController {
             return Response.newSuccess(token);
         } else {
             // 登录失败
-            return Response.newFail("Invalid username or password");
+            return Response.newFail("Invalid email address or password");
         }
     }
 }
