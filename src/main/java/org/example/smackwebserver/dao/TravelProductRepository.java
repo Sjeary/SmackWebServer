@@ -23,4 +23,16 @@ public interface TravelProductRepository extends JpaRepository<TravelProduct,Lon
                                              @Param("theme") String theme,
                                              @Param("departureLocation") String departureLocation,
                                              @Param("destination") String destination,
-                                             Pageable pageable);}
+                                             Pageable pageable);
+
+    @Query("SELECT tp FROM TravelProduct tp " +
+            "WHERE tp.title LIKE %:keyword% " +
+            "   OR tp.departureLocation LIKE %:keyword% " +
+            "   OR tp.destination LIKE %:keyword% " +
+            "   OR tp.features LIKE %:keyword% " +
+            "   OR tp.theme LIKE %:keyword% " +
+            "ORDER BY tp.id DESC")
+    Page<TravelProduct> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+
+}
