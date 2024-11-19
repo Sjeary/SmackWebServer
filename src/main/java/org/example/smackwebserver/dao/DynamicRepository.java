@@ -17,4 +17,6 @@ public interface DynamicRepository extends JpaRepository<Dynamic, Long> {
     @Query("SELECT d FROM Dynamic d JOIN d.tags t WHERE t.name = :tagName")
     Page<Dynamic> findByTagName(@Param("tagName") String tagName, Pageable pageable);
 
+    @Query("SELECT d FROM Dynamic d JOIN d.tags t WHERE t.id = :tagId")
+    Page<Dynamic> findByTagId(@Param("tagId") int tagId, Pageable pageable);
 }

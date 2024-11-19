@@ -16,5 +16,5 @@ public interface DynamicService {
 
     Map<String, Object> searchDynamicsByUserId(long userId, int page, int size);
 
-    Map<String, Object> searchDynamicsByTagName(String tagName, int page, int size);
+    Map<String, Object> searchDynamicsByTagId(int tagId, int page, int size);
 }

@@ -112,7 +112,7 @@ public class DynamicServiceImpl implements DynamicService {
 
     @Override
     public Map<String, Object> searchDynamicsByUserId(long userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("issuedAt").descending());
         Page<Dynamic> productPage = dynamicRepository.findByUserId(userId, pageable);
 
         // 将数据与总记录数封装为Map返回
@@ -124,9 +124,9 @@ public class DynamicServiceImpl implements DynamicService {
     }
 
     @Override
-    public Map<String, Object> searchDynamicsByTagName(String tagName, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Dynamic> productPage = dynamicRepository.findByTagName(tagName, pageable);
+    public Map<String, Object> searchDynamicsByTagId(int tagId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("issuedAt").descending());
+        Page<Dynamic> productPage = dynamicRepository.findByTagId(tagId, pageable);
 
         // 将数据与总记录数封装为Map返回
         Map<String, Object> result = new HashMap<>();

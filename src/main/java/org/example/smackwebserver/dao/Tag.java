@@ -1,5 +1,6 @@
 package org.example.smackwebserver.dao;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -33,7 +34,8 @@ public class Tag {
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    @JsonBackReference // 指定为被控方
     private Set<Dynamic> dynamics = new HashSet<>();
 
     public Set<Dynamic> getDynamics() {

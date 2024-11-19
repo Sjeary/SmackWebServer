@@ -48,7 +48,7 @@ public class DynamicController {
             @RequestBody Dynamic dynamic,
             @RequestParam List<String> tags) {
         try {
-            dynamic.setId((int) id); // 确保更新的产品 ID 是正确的
+            dynamic.setId((int) id); // 确保更新的动态 ID 是正确的
             Dynamic new_dynamic = dynamicService.updateDynamic(dynamic, tags);
             return Response.newSuccess(new_dynamic);
         } catch (IllegalArgumentException e) {

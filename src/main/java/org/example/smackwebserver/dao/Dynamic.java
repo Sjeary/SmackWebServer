@@ -1,5 +1,6 @@
 package org.example.smackwebserver.dao;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ public class Dynamic {
     private int id; // 动态ID
 
     @Column(name = "user_id", nullable = false)
-    private int userId; // 发布者的用户ID
+    private long userId; // 发布者的用户ID
 
     @Column(name = "title", nullable = false, length = 100)
     private String title; // 动态标题
@@ -41,11 +42,11 @@ public class Dynamic {
         this.id = id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -89,12 +90,13 @@ public class Dynamic {
         this.content = content;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tag_dynamic",
             joinColumns = @JoinColumn(name = "dynamic_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @JsonManagedReference // 指定为主控方
     private Set<Tag> tags = new HashSet<>();
 
     public Set<Tag> getTags() {
