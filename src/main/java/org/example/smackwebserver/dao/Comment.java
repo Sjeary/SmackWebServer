@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@MappedSuperclass
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -86,6 +86,7 @@ public class Comment {
         this.parentId = parentId;
     }
 
+    @Transient
     private List<? extends Comment> replies;
 
     public List<? extends Comment> getReplies() {

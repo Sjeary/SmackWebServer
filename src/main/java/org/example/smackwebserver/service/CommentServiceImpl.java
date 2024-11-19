@@ -7,34 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl<T extends Comment> implements CommentService<T> {
 
-    private final ProductCommentRepository productCommentRepository;
-    private final SpotCommentRepository spotCommentRepository;
-    private final DynamicCommentRepository dynamicCommentRepository;
+    private final CommentRepository<T> commentRepository;
 
-    public CommentServiceImpl(ProductCommentRepository productCommentRepository,
-                              SpotCommentRepository spotCommentRepository, DynamicCommentRepository dynamicCommentRepository) {
-        this.productCommentRepository = productCommentRepository;
-        this.spotCommentRepository = spotCommentRepository;
-        this.dynamicCommentRepository = dynamicCommentRepository;
+    public CommentServiceImpl(CommentRepository<T> commentRepository) {
+        this.commentRepository = commentRepository;
     }
 
     @Override
-    public List<? extends Comment> getNestedComments(String parentType, int parentId) {
-        List<? extends Comment> topLevelComments = getRepository(parentType).findTopByParentId(parentId);
-        for (Comment comment : topLevelComments) {
-            comment.setReplies(getRepository(parentType).findByReplyId(comment.getId()));
+    public List<T> getNestedComments(int parentId, Class<T> type) {
+        List<T> topLevelComments = commentRepository.findTopByParentId(parentId, type);
+        for (T comment : topLevelComments) {
+            comment.setReplies(commentRepository.findByReplyId(comment.getId(), type));
         }
         return topLevelComments;
     }
-
-    private CommentRepository<? extends Comment> getRepository(String parentType) {
-        return switch (parentType) {
-            case "TravelProduct" -> productCommentRepository;
-            case "Spot" -> spotCommentRepository;
-            case "Dynamic" -> dynamicCommentRepository;
-            default -> throw new IllegalArgumentException("Unknown comment parent type: " + parentType);
-        };
-    }
+    
 }

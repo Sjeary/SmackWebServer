@@ -1,8 +1,12 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
+import org.example.smackwebserver.dao.CommentRepository;
 import org.example.smackwebserver.dao.Dynamic;
+import org.example.smackwebserver.dao.DynamicComment;
+import org.example.smackwebserver.service.CommentService;
 import org.example.smackwebserver.service.DynamicService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,9 +16,11 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class DynamicController {
     private final DynamicService dynamicService;
+    private final CommentService<DynamicComment> commentService;
 
-    public DynamicController(DynamicService dynamicService) {
+    public DynamicController(DynamicService dynamicService, CommentService<DynamicComment> commentService) {
         this.dynamicService = dynamicService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/Dynamic/{id}")
@@ -80,6 +86,17 @@ public class DynamicController {
             return Response.newSuccess(result);
         } catch (Exception e) {
             return Response.newFail("Failed to search travel products: " + e.getMessage());
+        }
+    }
+
+    // 获取评论，一定要显式传入实体类！
+    @GetMapping("/Dynamic/{id}/Comments")
+    public Response<List<DynamicComment>> getComments(
+            @PathVariable int id) {
+        try {
+            return Response.newSuccess(commentService.getNestedComments(id, DynamicComment.class));
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
         }
     }
 }

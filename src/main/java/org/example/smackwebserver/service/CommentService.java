@@ -5,6 +5,6 @@ import org.example.smackwebserver.dao.CommentRepository;
 
 import java.util.List;
 
-public interface CommentService {
-    public List<? extends Comment> getNestedComments(String commentType, int parentId);
+public interface CommentService<T extends Comment> {
+    public List<T> getNestedComments(int parentId, Class<T> type); // 获取带回复嵌套的评论
 }
