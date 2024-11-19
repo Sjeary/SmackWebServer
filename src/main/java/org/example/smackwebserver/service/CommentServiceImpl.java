@@ -23,5 +23,5 @@ public class CommentServiceImpl<T extends Comment> implements CommentService<T> 
         }
         return topLevelComments;
     }
-    
+
 }
