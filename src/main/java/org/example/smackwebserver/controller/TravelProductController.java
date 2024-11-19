@@ -4,6 +4,10 @@ import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.TravelProduct;
 import org.example.smackwebserver.service.TravelProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,5 +87,18 @@ public class TravelProductController {
         }
     }
 
+    @GetMapping("/api/v1/TravelProduct/searchByKeyword")
+    public Response<Page<TravelProduct>> searchProducts(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+            Page<TravelProduct> products = travelProductService.searchProductsByKeyword(keyword, pageable);
+            return Response.newSuccess(products);
+        } catch (Exception e) {
+            return Response.newFail("Failed to search travel products: " + e.getMessage());
+        }
+    }
 
 }
