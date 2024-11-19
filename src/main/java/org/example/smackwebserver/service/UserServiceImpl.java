@@ -82,6 +82,14 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + user.getId() + " not found"));
 
+        // 检查新的邮箱是否已存在于其他用户中
+        if (user.getEmail() != null && !user.getEmail().equals(existingUser.getEmail())) {
+            List<User> usersWithSameEmail = userRepository.findByEmail(user.getEmail());
+            if (!usersWithSameEmail.isEmpty()) {
+                throw new IllegalStateException("Email: " + user.getEmail() + " is already in use by another user.");
+            }
+        }
+
         // 更新字段，如果传输的字段为 null，则保留原值
         if (user.getName() != null) {
             existingUser.setName(user.getName());
@@ -102,12 +110,12 @@ public class UserServiceImpl implements UserService {
             existingUser.setHomepageLink(user.getHomepageLink());
         }
 
-
         // 保存更新后的用户信息
         User updatedUser = userRepository.save(existingUser);
 
         return updatedUser.getId();
     }
+
 
 
 }
