@@ -2,9 +2,12 @@ package org.example.smackwebserver.dao;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "dynamics")
+@Table(name = "dynamic")
 public class Dynamic {
 
     @Id
@@ -18,11 +21,11 @@ public class Dynamic {
     @Column(name = "title", nullable = false, length = 100)
     private String title; // 动态标题
 
-    @Column(name = "type", nullable = false)
-    private int type; // 动态类型（0=产品，1=通知）
+    @Column(name = "content", nullable = false)
+    private String content; // 动态内容
 
-    @Column(name = "post_id", nullable = false)
-    private String postId; // 动态对应原帖id
+    @Column(name = "url_id")
+    private String urlId; // 动态对应产品id
 
     @Column(name = "issued_at", nullable = false, updatable = false)
     private LocalDateTime issuedAt; // 发布时间
@@ -54,20 +57,12 @@ public class Dynamic {
         this.title = title;
     }
 
-    public int getType() {
-        return type;
+    public String getUrlId() {
+        return urlId;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
+    public void setUrlId(String urlId) {
+        this.urlId = urlId;
     }
 
     public LocalDateTime getIssuedAt() {
@@ -86,4 +81,27 @@ public class Dynamic {
         this.updatedAt = updatedAt;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "tag_dynamic",
+            joinColumns = @JoinColumn(name = "dynamic_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 }
