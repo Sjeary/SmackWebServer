@@ -105,8 +105,12 @@ public class WebSocket_Smack {
                         if(packet instanceof Message) {
                             Message message = (Message) packet;
                             UserMessage userMessage = new UserMessage();
-                            userMessage.setSenderId(Long.getLong(message.getFrom().getLocalpartOrNull().toString()));
-                            userMessage.setReceiverId(Long.getLong(message.getTo().getLocalpartOrNull().toString()));
+                            if (message.getFrom() != null && message.getFrom().getLocalpartOrNull() != null) {
+                                userMessage.setSenderId(Long.parseLong(message.getFrom().getLocalpartOrNull().toString()));
+                            }
+                            if (message.getTo() != null && message.getTo().getLocalpartOrNull() != null) {
+                                userMessage.setReceiverId(Long.parseLong(message.getTo().getLocalpartOrNull().toString()));
+                            }
                             userMessage.setContent(message.getBody());
                             userMessage.setDate(new Date());
                             sendMessage(UserMessage.serializeUserMessage(userMessage));
