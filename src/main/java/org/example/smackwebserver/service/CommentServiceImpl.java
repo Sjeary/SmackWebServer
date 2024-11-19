@@ -15,6 +15,7 @@ public class CommentServiceImpl<T extends Comment> implements CommentService<T> 
         this.commentRepository = commentRepository;
     }
 
+    // 获取带回复的评论（只有一层楼中楼，不然嵌套太深了）
     @Override
     public List<T> getNestedComments(int parentId, Class<T> type) {
         List<T> topLevelComments = commentRepository.findTopByParentId(parentId, type);
