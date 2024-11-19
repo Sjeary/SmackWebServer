@@ -162,5 +162,9 @@ public class TravelProductServiceImpl implements TravelProductService {
 
         return result;
     }
+    @Override
+    public Page<TravelProduct> searchProductsByKeyword(String keyword, Pageable pageable) {
+        return travelProductRepository.searchByKeyword(keyword, pageable);
+    }
 }
 

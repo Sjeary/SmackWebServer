@@ -230,7 +230,66 @@ public class CustomErrorController implements ErrorController {
                     "success": true<br>
                 }<br>
                 
-                
+                /api/v1/TravelProduct/searchByKeyword?keyword=丽江&page=0&size=10 GET：使用关键字查询结果，返回存在于标题 主题 特色 出发地 目的地的结果<br>
+                response:<br>
+                {<br>
+                    "data": {<br>
+                        "content": [<br>
+                            {<br>
+                                "id": 1,<br>
+                                "userId": 1,<br>
+                                "title": "丽江深度游",<br>
+                                "startDate": "2024-12-01",<br>
+                                "endDate": "2024-12-07",<br>
+                                "features": "感受纳西族文化，体验玉龙雪山之美",<br>
+                                "theme": "文化体验",<br>
+                                "departureLocation": "昆明",<br>
+                                "destination": "丽江",<br>
+                                "maxCapacity": 20,<br>
+                                "productType": "跟团游",<br>
+                                "price": 1999.99,<br>
+                                "createdAt": "2024-11-17",<br>
+                                "updatedAt": "2024-11-17"<br>
+                            },<br>
+                            {<br>
+                                "id": 2,<br>
+                                "userId": 2,<br>
+                                "title": "云南大理自由行",<br>
+                                "startDate": "2024-12-08",<br>
+                                "endDate": "2024-12-14",<br>
+                                "features": "苍山洱海，浪漫之旅",<br>
+                                "theme": "休闲度假",<br>
+                                "departureLocation": "昆明",<br>
+                                "destination": "大理",<br>
+                                "maxCapacity": 10,<br>
+                                "productType": "自由行",<br>
+                                "price": 2599.99,<br>
+                                "createdAt": "2024-11-18",<br>
+                                "updatedAt": "2024-11-18"<br>
+                            }<br>
+                        ],<br>
+                        "totalPages": 3,<br>
+                        "totalElements": 25,<br>
+                        "size": 10,<br>
+                        "number": 0,<br>
+                        "numberOfElements": 2,<br>
+                        "last": false,<br>
+                        "first": true,<br>
+                        "empty": false<br>
+                    },<br>
+                    "errorMsg": null,<br>
+                    "success": true<br>
+                }<br>
+                Page 对象中的字段解释:<br>
+                content	当前页的内容，是一个列表，包含具体的数据记录。<br>
+                totalPages	总页数，表示结果可以分为多少页。<br>
+                totalElements	总记录数，符合条件的结果的总条数。<br>
+                size	每页的记录数，等于请求参数中的 size。<br>
+                number	当前页的页码，从 0 开始。<br>
+                numberOfElements	当前页的实际记录数，可能小于等于 size（最后一页时）。<br>
+                last	是否是最后一页，布尔值。<br>
+                first	是否是第一页，布尔值。<br>
+                empty	当前页是否为空，布尔值。<br>
                 后端进行了跨域访问配置 成功了<br>
                 """;
     }
