@@ -1,5 +1,10 @@
 package org.example.smackwebserver;
 
+import org.example.smackwebserver.dao.CommentRepository;
+import org.example.smackwebserver.dao.DynamicComment;
+import org.example.smackwebserver.dao.ProductComment;
+import org.example.smackwebserver.service.CommentService;
+import org.example.smackwebserver.service.CommentServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
