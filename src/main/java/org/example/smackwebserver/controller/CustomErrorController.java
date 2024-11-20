@@ -105,6 +105,7 @@ public class CustomErrorController implements ErrorController {
                         "maxCapacity": 20,<br>
                         "productType": "跟团游",<br>
                         "price": 1999.99,<br>
+                        "url":"https://...",<br>
                         "createdAt": "2024-11-17",<br>
                         "updatedAt": "2024-11-17"<br>
                     },<br>
@@ -125,7 +126,8 @@ public class CustomErrorController implements ErrorController {
                     "destination": "丽江",<br>
                     "maxCapacity": 20,<br>
                     "productType": "跟团游",<br>
-                    "price": 1999.99<br>
+                    "price": 1999.99,<br>
+                    "url":"https://..."<br>
                 }<br>
                 response:<br>
                 {<br>
@@ -149,7 +151,8 @@ public class CustomErrorController implements ErrorController {
                     "destination": "丽江",<br>
                     "maxCapacity": 15,<br>
                     "productType": "豪华跟团游",<br>
-                    "price": 2999.99<br>
+                    "price": 2999.99,<br>
+                    "url":"https://..."<br>
                 }<br>
                 说明：<br>
                 
@@ -222,7 +225,8 @@ public class CustomErrorController implements ErrorController {
                                 "productType": "豪华跟团游",<br>
                                 "price": 2999.99,<br>
                                 "createdAt": "2024-11-17",<br>
-                                "updatedAt": "2024-11-17"<br>
+                                "updatedAt": "2024-11-17",<br>
+                                "url":"https://..."<br>
                             }<br>
                         ]<br>
                     },<br>
@@ -249,7 +253,8 @@ public class CustomErrorController implements ErrorController {
                                 "productType": "跟团游",<br>
                                 "price": 1999.99,<br>
                                 "createdAt": "2024-11-17",<br>
-                                "updatedAt": "2024-11-17"<br>
+                                "updatedAt": "2024-11-17",<br>
+                                "url":"https://..."<br>
                             },<br>
                             {<br>
                                 "id": 2,<br>
@@ -265,7 +270,8 @@ public class CustomErrorController implements ErrorController {
                                 "productType": "自由行",<br>
                                 "price": 2599.99,<br>
                                 "createdAt": "2024-11-18",<br>
-                                "updatedAt": "2024-11-18"<br>
+                                "updatedAt": "2024-11-18",<br>
+                                "url":"https://..."<br>
                             }<br>
                         ],<br>
                         "totalPages": 3,<br>
