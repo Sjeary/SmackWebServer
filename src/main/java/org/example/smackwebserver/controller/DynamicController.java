@@ -67,10 +67,6 @@ public class DynamicController {
     @DeleteMapping("/Dynamic/{id}")
     public Response<Long> deleteDynamic(@PathVariable long id) {
         try {
-            Dynamic dynamic = dynamicService.getDynamicById(id);
-            if (dynamic == null) {
-                return Response.newFail("Dynamic not found");
-            }
             dynamicService.deleteDynamicById(id);
             commentService.deleteComments((int) id, DynamicComment.class);
             return Response.newSuccess(id);

@@ -103,7 +103,7 @@ public class DynamicServiceImpl implements DynamicService {
     @Override
     public void deleteDynamicById(long id) {
         if (!dynamicRepository.existsById(id)) {
-            throw new IllegalArgumentException("Travel product with ID " + id + " does not exist");
+            throw new IllegalArgumentException("Dynamic with ID " + id + " does not exist");
         }
 
         // 删除动态
