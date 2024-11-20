@@ -1,5 +1,7 @@
 package org.example.smackwebserver.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -96,9 +98,9 @@ public class Dynamic {
             joinColumns = @JoinColumn(name = "dynamic_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    @JsonManagedReference // 指定为主控方
     private Set<Tag> tags = new HashSet<>();
 
+    @JsonIgnoreProperties("dynamics")
     public Set<Tag> getTags() {
         return tags;
     }

@@ -69,8 +69,8 @@ public class DynamicServiceImpl implements DynamicService {
     @Override
     public Dynamic updateDynamic(Dynamic dynamic, List<String> tagNames) {
         // 检查是否存在指定ID的动态
-        Dynamic existingProduct = dynamicRepository.findById((long)dynamic.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Travel product with ID " + dynamic.getId() + " does not exist"));
+        Dynamic existingProduct = dynamicRepository.findById((long) dynamic.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Dynamic with ID " + dynamic.getId() + " does not exist"));
 
         // 更新非空字段
         if (dynamic.getTitle() != null) {
@@ -86,7 +86,8 @@ public class DynamicServiceImpl implements DynamicService {
         // 更新更新时间
         existingProduct.setUpdatedAt(LocalDateTime.now());
 
-        dynamic.getTags().clear();
+        // 更新标签
+        existingProduct.getTags().clear(); // 清除旧的标签
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
             if (tag == null) {
@@ -94,11 +95,13 @@ public class DynamicServiceImpl implements DynamicService {
                 tag.setName(tagName);
                 tagRepository.save(tag);
             }
-            dynamic.getTags().add(tag);
+            existingProduct.getTags().add(tag);
         }
 
-        return dynamicRepository.save(dynamic);
+        // 保存修改后的对象
+        return dynamicRepository.save(existingProduct);
     }
+
 
     @Override
     public void deleteDynamicById(long id) {
