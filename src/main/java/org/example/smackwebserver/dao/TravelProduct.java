@@ -50,6 +50,18 @@ public class TravelProduct {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt; // 创建时间
 
+    @Column(name = "url", length = 255)
+    private String url; // 图片网址
+
+    // Getter and Setter
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public int getId() {
         return id;
     }

@@ -101,6 +101,9 @@ public class TravelProductServiceImpl implements TravelProductService {
         if (travelProduct.getTitle() != null) {
             existingProduct.setTitle(travelProduct.getTitle());
         }
+        if (travelProduct.getUrl() != null) {
+            existingProduct.setUrl(travelProduct.getUrl());
+        }
         if (travelProduct.getStartDate() != null) {
             existingProduct.setStartDate(travelProduct.getStartDate());
         }
