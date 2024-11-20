@@ -67,7 +67,12 @@ public class DynamicController {
     @DeleteMapping("/Dynamic/{id}")
     public Response<Long> deleteDynamic(@PathVariable long id) {
         try {
+            Dynamic dynamic = dynamicService.getDynamicById(id);
+            if (dynamic == null) {
+                return Response.newFail("Dynamic not found");
+            }
             dynamicService.deleteDynamicById(id);
+            commentService.deleteComments((int) id, DynamicComment.class);
             return Response.newSuccess(id);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -97,6 +102,24 @@ public class DynamicController {
             return Response.newSuccess(commentService.getNestedComments(id, DynamicComment.class));
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/Dynamic/{id}/Comments")
+    public Response<DynamicComment> createComment(@RequestBody DynamicComment dynamicComment, @PathVariable("id") int id) {
+        try {
+            Dynamic dynamic = dynamicService.getDynamicById(id);
+            if (dynamic == null) {
+                return Response.newFail("Dynamic not found");
+            }
+            DynamicComment new_dynamicComment = commentService.createComment(id, dynamicComment, DynamicComment.class);
+            return Response.newSuccess(new_dynamicComment);
+        } catch (IllegalArgumentException e) {
+            // 捕获服务层抛出的异常并返回失败响应
+            return Response.newFail(e.getMessage());
+        } catch (Exception e) {
+            // 捕获其他可能的异常
+            return Response.newFail("Failed to create dynamic comment: " + e.getMessage());
         }
     }
 }

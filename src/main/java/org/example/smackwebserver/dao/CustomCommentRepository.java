@@ -7,5 +7,11 @@ public interface CustomCommentRepository<T extends Comment> {
     List<T> findByReplyId(Integer replyId, Class<T> type);
 
     List<T> findTopByParentId(int parentId, Class<T> type);
+
+    T findById(int id, Class<T> type);
+
+    T save(T comment, Class<T> type);
+
+    void deleteByParentId(int parentId, Class<T> type);
 }
 

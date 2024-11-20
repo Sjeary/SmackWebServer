@@ -1,6 +1,7 @@
 package org.example.smackwebserver.dao;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class Tag {
     @JsonBackReference // 指定为被控方
     private Set<Dynamic> dynamics = new HashSet<>();
 
+    @JsonIgnoreProperties("tags")
     public Set<Dynamic> getDynamics() {
         return dynamics;
     }
