@@ -40,6 +40,8 @@ public class CommentServiceImpl<T extends Comment> implements CommentService<T> 
             T f_comment = commentRepository.findById(comment.getReplyId(), type);
             if (f_comment == null) {
                 throw new IllegalArgumentException("Original comment not found");
+            } else if (f_comment.getReplyId() != null) {
+                throw new IllegalArgumentException("Original comment is not top-floor");
             }
         }
 
