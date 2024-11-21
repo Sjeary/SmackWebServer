@@ -1,7 +1,11 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
+import org.example.smackwebserver.dao.Dynamic;
+import org.example.smackwebserver.dao.DynamicComment;
+import org.example.smackwebserver.dao.ProductComment;
 import org.example.smackwebserver.dao.TravelProduct;
+import org.example.smackwebserver.service.CommentService;
 import org.example.smackwebserver.service.TravelProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +21,7 @@ import java.util.Map;
 public class TravelProductController {
     @Autowired
     private TravelProductService travelProductService;
+    private CommentService<ProductComment> commentService;
 
     @GetMapping("/api/v1/TravelProduct/{id}")
     public Response<TravelProduct> getTravelProduct(@PathVariable("id") long id) {
@@ -101,4 +106,32 @@ public class TravelProductController {
         }
     }
 
+    // 获取评论，一定要显式传入实体类！
+    @GetMapping("/api/v1/TravelProduct/{id}/Comments")
+    public Response<List<ProductComment>> getComments(
+            @PathVariable int id) {
+        try {
+            return Response.newSuccess(commentService.getNestedComments(id, ProductComment.class));
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/api/v1/TravelProduct/{id}/Comments")
+    public Response<ProductComment> createComment(@RequestBody ProductComment productComment, @PathVariable("id") int id) {
+        try {
+            TravelProduct travelProduct = travelProductService.getTravelProductById(id);
+            if (travelProduct == null) {
+                return Response.newFail("Travel Product not found");
+            }
+            ProductComment new_productComment = commentService.createComment(id, productComment, ProductComment.class);
+            return Response.newSuccess(new_productComment);
+        } catch (IllegalArgumentException e) {
+            // 捕获服务层抛出的异常并返回失败响应
+            return Response.newFail(e.getMessage());
+        } catch (Exception e) {
+            // 捕获其他可能的异常
+            return Response.newFail("Failed to create travel product comment: " + e.getMessage());
+        }
+    }
 }
