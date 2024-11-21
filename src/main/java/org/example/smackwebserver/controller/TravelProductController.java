@@ -2,10 +2,10 @@ package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.Dynamic;
-import org.example.smackwebserver.dao.DynamicComment;
 import org.example.smackwebserver.dao.ProductComment;
 import org.example.smackwebserver.dao.TravelProduct;
 import org.example.smackwebserver.service.CommentService;
+import org.example.smackwebserver.service.DynamicService;
 import org.example.smackwebserver.service.TravelProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +23,8 @@ public class TravelProductController {
     private TravelProductService travelProductService;
     @Autowired
     private CommentService<ProductComment> commentService;
+    @Autowired
+    private DynamicService dynamicService;
 
     @GetMapping("/api/v1/TravelProduct/{id}")
     public Response<TravelProduct> getTravelProduct(@PathVariable("id") long id) {
@@ -39,6 +41,8 @@ public class TravelProductController {
     public Response<Long> createTravelProduct(@RequestBody TravelProduct travelProduct) {
         try {
             Long productId = travelProductService.createTravelProduct(travelProduct);
+            TravelProduct product = travelProductService.getTravelProductById(productId);
+            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "发布旅游产品：");
             return Response.newSuccess(productId);
         } catch (IllegalArgumentException e) {
             // 捕获服务层抛出的异常并返回失败响应
@@ -55,6 +59,8 @@ public class TravelProductController {
         try {
             travelProduct.setId((int) id); // 确保更新的产品 ID 是正确的
             Long updatedId = travelProductService.updateTravelProduct(travelProduct);
+            TravelProduct product = travelProductService.getTravelProductById(updatedId);
+            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "更新旅游产品：");
             return Response.newSuccess(updatedId);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());

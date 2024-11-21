@@ -8,10 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @Service
 public class DynamicServiceImpl implements DynamicService {
@@ -52,6 +52,38 @@ public class DynamicServiceImpl implements DynamicService {
         // 保存到数据库
         dynamic.setIssuedAt(LocalDateTime.now());
         dynamic.setUpdatedAt(LocalDateTime.now());
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByName(tagName);
+            if (tag == null) {
+                tag = new Tag();
+                tag.setName(tagName);
+                tagRepository.save(tag);
+            }
+            dynamic.getTags().add(tag);
+        }
+
+        return dynamicRepository.save(dynamic);
+    }
+
+    @Override
+    public Dynamic createDynamic(TravelProduct travelProduct, String description) {
+        // 根据产品自动设置内容
+        Dynamic dynamic = new Dynamic();
+
+        dynamic.setUserId(travelProduct.getUserId());
+        dynamic.setTitle(description + travelProduct.getTitle());
+        dynamic.setContent(travelProduct.getFeatures());
+        dynamic.setUrlId(travelProduct.getId());
+
+        dynamic.setIssuedAt(LocalDateTime.now());
+        dynamic.setUpdatedAt(LocalDateTime.now());
+
+        // 把旅游产品的出发地、目的地、主题设为Tag
+        List<String> tagNames = new ArrayList<>();
+        tagNames.add(travelProduct.getDepartureLocation());
+        tagNames.add(travelProduct.getDestination());
+        tagNames.add(travelProduct.getTheme());
 
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
