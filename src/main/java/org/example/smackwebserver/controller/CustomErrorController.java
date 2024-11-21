@@ -79,7 +79,10 @@ public class CustomErrorController implements ErrorController {
                 {<br>
                     "name": "新名字",<br>
                     "email": "newemail@example.com",<br>
-                    "companyName": "新公司名称"<br>
+                    "companyName": "新公司名称",<br>
+                    "passwd"<br>
+                    "companyIntroduction"<br>
+                    "homepageLink"<br>
                 }<br>
                 response:<br>
                 {<br>
