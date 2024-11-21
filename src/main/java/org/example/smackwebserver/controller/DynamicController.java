@@ -1,11 +1,10 @@
 package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
-import org.example.smackwebserver.dao.CommentRepository;
-import org.example.smackwebserver.dao.Dynamic;
-import org.example.smackwebserver.dao.DynamicComment;
+import org.example.smackwebserver.dao.*;
 import org.example.smackwebserver.service.CommentService;
 import org.example.smackwebserver.service.DynamicService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +14,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class DynamicController {
-    private final DynamicService dynamicService;
-    private final CommentService<DynamicComment> commentService;
-
-    public DynamicController(DynamicService dynamicService, CommentService<DynamicComment> commentService) {
-        this.dynamicService = dynamicService;
-        this.commentService = commentService;
-    }
+    @Autowired
+    private CommentService<DynamicComment> commentService;
+    @Autowired
+    private DynamicService dynamicService;
+    @Autowired
+    private CommentService<DynamicComment> dynamicCommentService;
+    @Autowired
+    private CommentService<SpotComment> spotCommentService;
+    @Autowired
+    private CommentService<ProductComment> productCommentService;
 
     @GetMapping("/Dynamic/{id}")
     public Response<Dynamic> getDynamic(@PathVariable long id) {
@@ -40,13 +42,12 @@ public class DynamicController {
             Dynamic new_dynamic = dynamicService.createDynamic(dynamic, tags);
             return Response.newSuccess(new_dynamic);
         } catch (IllegalArgumentException e) {
-            // 捕获服务层抛出的异常并返回失败响应
             return Response.newFail(e.getMessage());
         } catch (Exception e) {
-            // 捕获其他可能的异常
             return Response.newFail("Failed to create dynamic: " + e.getMessage());
         }
     }
+
 
     @PutMapping("/Dynamic/{id}")
     public Response<Dynamic> updateDynamic(
@@ -92,10 +93,28 @@ public class DynamicController {
 
     // 获取评论，一定要显式传入实体类！
     @GetMapping("/Dynamic/{id}/Comments")
-    public Response<List<DynamicComment>> getComments(
+    public Response<List<DynamicComment>> getDynamicComments(
             @PathVariable int id) {
         try {
-            return Response.newSuccess(commentService.getNestedComments(id, DynamicComment.class));
+            return Response.newSuccess(dynamicCommentService.getNestedComments(id, DynamicComment.class));
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        }
+    }
+    @GetMapping("/Spot/{id}/Comments")
+    public Response<List<SpotComment>> getSpotComments(
+            @PathVariable int id) {
+        try {
+            return Response.newSuccess(spotCommentService.getNestedComments(id, SpotComment.class));
+        } catch (IllegalArgumentException e) {
+            return Response.newFail(e.getMessage());
+        }
+    }
+    @GetMapping("/Product/{id}/Comments")
+    public Response<List<ProductComment>> getProductComments(
+            @PathVariable int id) {
+        try {
+            return Response.newSuccess(productCommentService.getNestedComments(id, ProductComment.class));
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
         }

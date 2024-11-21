@@ -70,7 +70,7 @@ public class DynamicServiceImpl implements DynamicService {
     public Dynamic updateDynamic(Dynamic dynamic, List<String> tagNames) {
         // 检查是否存在指定ID的动态
         Dynamic existingDynamic = dynamicRepository.findById((long)dynamic.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Travel product with ID " + dynamic.getId() + " does not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("Dynamic with ID " + dynamic.getId() + " does not exist"));
 
         // 更新非空字段
         if (dynamic.getTitle() != null) {
