@@ -14,7 +14,7 @@ public class XMPPConnectionServiceImpl implements XMPPConnectionService {
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(username, password)
-                    .setXmppDomain("localhosy")
+                    .setXmppDomain("localhost")
                     .setHost("120.46.26.49")
                     .setPort(5222)
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
