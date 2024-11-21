@@ -21,6 +21,7 @@ import java.util.Map;
 public class TravelProductController {
     @Autowired
     private TravelProductService travelProductService;
+    @Autowired
     private CommentService<ProductComment> commentService;
 
     @GetMapping("/api/v1/TravelProduct/{id}")
