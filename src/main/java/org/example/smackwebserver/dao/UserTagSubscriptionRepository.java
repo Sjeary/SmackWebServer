@@ -1,0 +1,17 @@
+package org.example.smackwebserver.dao;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface UserTagSubscriptionRepository extends JpaRepository<UserTagSubscription, Long> {
+
+    Optional<UserTagSubscription> findByUserIdAndTagId(Long userId, Long tagId);
+
+    List<UserTagSubscription> findByUserId(Long userId);
+
+    List<UserTagSubscription> findByTagId(Long tagId);
+}
