@@ -3,6 +3,7 @@ package org.example.smackwebserver.dao;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @MappedSuperclass
@@ -13,9 +14,9 @@ public class Comment {
     private Integer id; // 评论ID
 
     @Column(name = "user_id", nullable = false)
-    private int userId; // 评论的用户ID
+    private long userId; // 评论的用户ID
 
-    @Column(name = "reply_id", nullable = false, length = 100)
+    @Column(name = "reply_id", nullable = true)
     private Integer replyId; // 回复的顶楼Id
 
     @Column(name = "content", nullable = false)
@@ -24,11 +25,8 @@ public class Comment {
     @Column(name = "issued_at", nullable = false, updatable = false)
     private LocalDateTime issuedAt; // 发布时间
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt; // 更新时间
-
     @Column(nullable = false)
-    private int parentId; // 评论对应原帖Id
+    private Integer parentId; // 评论对应原帖Id
 
     public Integer getId() {
         return id;
@@ -38,11 +36,11 @@ public class Comment {
         this.id = id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -70,19 +68,11 @@ public class Comment {
         this.issuedAt = issuedAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 

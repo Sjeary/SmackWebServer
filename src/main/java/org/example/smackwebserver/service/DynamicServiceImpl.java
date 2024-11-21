@@ -69,25 +69,24 @@ public class DynamicServiceImpl implements DynamicService {
     @Override
     public Dynamic updateDynamic(Dynamic dynamic, List<String> tagNames) {
         // 检查是否存在指定ID的动态
-        Dynamic existingProduct = dynamicRepository.findById((long) dynamic.getId())
+        Dynamic existingDynamic = dynamicRepository.findById((long)dynamic.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Dynamic with ID " + dynamic.getId() + " does not exist"));
 
         // 更新非空字段
         if (dynamic.getTitle() != null) {
-            existingProduct.setTitle(dynamic.getTitle());
+            existingDynamic.setTitle(dynamic.getTitle());
         }
         if (dynamic.getContent() != null) {
-            existingProduct.setContent(dynamic.getContent());
+            existingDynamic.setContent(dynamic.getContent());
         }
         if (dynamic.getUrlId() != null) {
-            existingProduct.setUrlId(dynamic.getUrlId());
+            existingDynamic.setUrlId(dynamic.getUrlId());
         }
 
         // 更新更新时间
-        existingProduct.setUpdatedAt(LocalDateTime.now());
+        existingDynamic.setUpdatedAt(LocalDateTime.now());
 
-        // 更新标签
-        existingProduct.getTags().clear(); // 清除旧的标签
+        existingDynamic.getTags().clear();
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
             if (tag == null) {
@@ -95,18 +94,16 @@ public class DynamicServiceImpl implements DynamicService {
                 tag.setName(tagName);
                 tagRepository.save(tag);
             }
-            existingProduct.getTags().add(tag);
+            existingDynamic.getTags().add(tag);
         }
 
-        // 保存修改后的对象
-        return dynamicRepository.save(existingProduct);
+        return dynamicRepository.save(existingDynamic);
     }
-
 
     @Override
     public void deleteDynamicById(long id) {
         if (!dynamicRepository.existsById(id)) {
-            throw new IllegalArgumentException("Travel product with ID " + id + " does not exist");
+            throw new IllegalArgumentException("Dynamic with ID " + id + " does not exist");
         }
 
         // 删除动态

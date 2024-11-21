@@ -98,6 +98,7 @@ public class Dynamic {
             joinColumns = @JoinColumn(name = "dynamic_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @JsonManagedReference // 指定为主控方
     private Set<Tag> tags = new HashSet<>();
 
     @JsonIgnoreProperties("dynamics")
