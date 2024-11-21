@@ -18,7 +18,7 @@
                     return;
                 }
                 try {
-                    ws = new WebSocket("ws://43.143.213.221:8080/websocket/" + userId);//连接服务器
+                    ws = new WebSocket("ws://120.46.26.49:8080/websocket/" + userId);//连接服务器
                     ws.onopen = function (event) {
                         console.log("已经与服务器建立了连接...");
                         alert("服务器链接成功！。\n如果发消息失败的话就是服务端的锅了。")

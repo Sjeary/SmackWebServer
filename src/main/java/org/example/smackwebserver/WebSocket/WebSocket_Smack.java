@@ -72,7 +72,7 @@ public class WebSocket_Smack {
             // 配置 connection
             XMPPTCPConnectionConfiguration configSender = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(Long.toString(this.userId), "123456")
-                    .setXmppDomain("sjeary")
+                    .setXmppDomain(MySmackConfiguration.domainName)
                     .setResource("web") // 表示链接方式
                     .setHost(MySmackConfiguration.hostname)
                     .setPort(MySmackConfiguration.port)
@@ -82,7 +82,7 @@ public class WebSocket_Smack {
 
             XMPPTCPConnectionConfiguration configReceiver = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(Long.toString(this.userId), "123456")
-                    .setXmppDomain("sjeary")
+                    .setXmppDomain(MySmackConfiguration.domainName)
                     .setHost(MySmackConfiguration.hostname)
                     .setPort(MySmackConfiguration.port)
                     .addEnabledSaslMechanism("PLAIN")
