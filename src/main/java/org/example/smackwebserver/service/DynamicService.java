@@ -1,6 +1,7 @@
 package org.example.smackwebserver.service;
 
 import org.example.smackwebserver.dao.Dynamic;
+import org.example.smackwebserver.dao.TravelProduct;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,8 @@ public interface DynamicService {
     Dynamic getDynamicById(long id);
 
     Dynamic createDynamic(Dynamic dynamic, List<String> tagNames);
+
+    Dynamic createDynamic(TravelProduct travelProduct, String description);
 
     Dynamic updateDynamic(Dynamic dynamic, List<String> tagNames);
 

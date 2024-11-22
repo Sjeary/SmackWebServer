@@ -3,6 +3,7 @@ package org.example.smackwebserver.controller;
 import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.UserSubscription;
 import org.example.smackwebserver.service.UserSubscriptionService;
+import org.example.smackwebserver.service.XMPPConnectionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,15 +13,20 @@ import java.util.List;
 public class UserSubscriptionController {
 
     private final UserSubscriptionService userSubscriptionService;
+    private final XMPPConnectionService xmppConnectionService;
 
-    public UserSubscriptionController(UserSubscriptionService userSubscriptionService) {
+    public UserSubscriptionController(UserSubscriptionService userSubscriptionService, XMPPConnectionService xmppConnectionService) {
         this.userSubscriptionService = userSubscriptionService;
+        this.xmppConnectionService = xmppConnectionService;
     }
 
     @PostMapping("/{userIdFrom}/{userIdTo}")
     public Response<UserSubscription> addSubscription(@PathVariable Long userIdFrom, @PathVariable Long userIdTo) {
         try {
             UserSubscription subscription = userSubscriptionService.addSubscription(userIdFrom, userIdTo);
+            xmppConnectionService.getConnection(userIdFrom);
+            // 这里还要加上PubSubService的subscribe功能
+            // pubsubService.subscribe(xmppConnectionService.getUserName(userIdTo));
             return Response.newSuccess(subscription);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -31,6 +37,9 @@ public class UserSubscriptionController {
     public Response<String> removeSubscription(@PathVariable Long userIdFrom, @PathVariable Long userIdTo) {
         try {
             userSubscriptionService.removeSubscription(userIdFrom, userIdTo);
+            xmppConnectionService.getConnection(userIdFrom);
+            // 这里还要加上PubSubService的unsubscribe功能
+            // pubsubService.unsubscribe(xmppConnectionService.getUserName(userIdTo));
             return Response.newSuccess("Subscription removed successfully.");
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());

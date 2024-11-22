@@ -28,7 +28,7 @@ public class Dynamic {
     private String content; // 动态内容
 
     @Column(name = "url_id")
-    private String urlId; // 动态对应产品id
+    private Integer urlId; // 动态对应产品id
 
     @Column(name = "issued_at", nullable = false, updatable = false)
     private LocalDateTime issuedAt; // 发布时间
@@ -60,11 +60,11 @@ public class Dynamic {
         this.title = title;
     }
 
-    public String getUrlId() {
+    public Integer getUrlId() {
         return urlId;
     }
 
-    public void setUrlId(String urlId) {
+    public void setUrlId(Integer urlId) {
         this.urlId = urlId;
     }
 
