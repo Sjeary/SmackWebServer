@@ -2,6 +2,8 @@ package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.UserTagSubscription;
+import org.example.smackwebserver.service.SmackPubSubService;
+import org.example.smackwebserver.service.TagService;
 import org.example.smackwebserver.service.UserTagSubscriptionService;
 import org.example.smackwebserver.service.XMPPConnectionService;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,14 @@ public class UserTagController {
 
     private final UserTagSubscriptionService userTagSubscriptionService;
     private final XMPPConnectionService xmppConnectionService;
+    private final SmackPubSubService pubSubService;
+    private final TagService tagService;
 
-    public UserTagController(UserTagSubscriptionService userTagSubscriptionService, XMPPConnectionService xmppConnectionService) {
+    public UserTagController(UserTagSubscriptionService userTagSubscriptionService, XMPPConnectionService xmppConnectionService, SmackPubSubService pubSubService, TagService tagService) {
         this.userTagSubscriptionService = userTagSubscriptionService;
         this.xmppConnectionService = xmppConnectionService;
+        this.pubSubService = pubSubService;
+        this.tagService = tagService;
     }
 
     @PostMapping("/{userId}/{tagId}")
@@ -25,8 +31,7 @@ public class UserTagController {
         try {
             UserTagSubscription subscription = userTagSubscriptionService.addSubscription(userId, tagId);
             xmppConnectionService.getConnection(userId);
-            // 这里还要加上PubSubService的subscribe功能
-            // pubsubService.subscribe(xmppConnectionService.getTagName(tagId));
+            pubSubService.subscribeTag(userId, tagService.getTagById(tagId).getName());
             return Response.newSuccess(subscription);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -38,8 +43,7 @@ public class UserTagController {
         try {
             userTagSubscriptionService.removeSubscription(userId, tagId);
             xmppConnectionService.getConnection(userId);
-            // 这里还要加上PubSubService的unsubscribe功能
-            // pubsubService.unsubscribe(xmppConnectionService.getTagName(tagId));
+            pubSubService.unsubscribeTag(userId, tagService.getTagById(tagId).getName());
             return Response.newSuccess("Subscription removed successfully.");
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());

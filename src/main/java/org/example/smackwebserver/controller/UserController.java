@@ -4,6 +4,7 @@ import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.User;
 import org.example.smackwebserver.dto.LoginResponse;
 import org.example.smackwebserver.dto.UserDTO;
+import org.example.smackwebserver.service.SmackPubSubService;
 import org.example.smackwebserver.service.UserService;
 import org.example.smackwebserver.service.XMPPConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private XMPPConnectionService xmppConnectionService;
+    @Autowired
+    private SmackPubSubService pubSubService;
 
     @GetMapping("/api/v1/User/{id}")
     public Response<UserDTO> getUserById(@PathVariable long id) {
@@ -34,6 +37,7 @@ public class UserController {
             long id = userService.createUser(userDTO);
             // 在Openfire服务器同步创建用户
             xmppConnectionService.register(id);
+            pubSubService.createUserNode(id);
             return Response.newSuccess(id);
         } catch (IllegalStateException e) {
             // 捕获 Email 重复异常，返回失败响应
@@ -52,6 +56,7 @@ public class UserController {
             LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
             // 同步登录Openfire
             xmppConnectionService.connect(fullUserInfo.getId());
+            pubSubService.createUserNode(fullUserInfo.getId());
             return Response.newSuccess(loginResponse);
         } else {
             // 登录失败
@@ -70,6 +75,7 @@ public class UserController {
             LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
             // 同步登录Openfire
             xmppConnectionService.connect(fullUserInfo.getId());
+            pubSubService.createUserNode(fullUserInfo.getId());
             return Response.newSuccess(loginResponse);
         } else {
             // 登录失败

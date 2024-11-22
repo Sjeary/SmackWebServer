@@ -51,16 +51,16 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     }
 
     @Override
-    public void createUserNode(int userId) {
+    public void createUserNode(long userId) {
         try {
             pubSubManager.createNode("user_"+userId);
         } catch (Exception e) {
-            logger.error("cann't create user node:"+e.getMessage());
+            logger.error("can't create user node:"+e.getMessage());
         }
     }
 
     @Override
-    public void subscribe(int userNodeId, String subscribedNodeId) {
+    public void subscribe(long userNodeId, String subscribedNodeId) {
         Jid userJid = JidCreate.bareFromOrNull("user_"+userNodeId+this.domainName);
         try {
             LeafNode node = pubSubManager.getOrCreateLeafNode(subscribedNodeId);
@@ -72,12 +72,12 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     }
 
     @Override
-    public void subscribeTag(int userNodeId, String tag) {
+    public void subscribeTag(long userNodeId, String tag) {
         this.subscribe(userNodeId, tag);
     }
 
     @Override
-    public void subscribeUser(int userNodeId, int subscribedUserId) {
+    public void subscribeUser(long userNodeId, long subscribedUserId) {
         if (userService.getUserById(userNodeId) == null) {
             logger.error("user does not exist: ",+subscribedUserId);
             return;
@@ -86,7 +86,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     }
 
     @Override
-    public void unsubscribe(int userNodeId, String subscribedNodeId) {
+    public void unsubscribe(long userNodeId, String subscribedNodeId) {
         LeafNode node;
         try {
             node = pubSubManager.getLeafNode(subscribedNodeId);
@@ -102,12 +102,12 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     }
 
     @Override
-    public void unsubscribeTag(int userNodeId, String tag) {
+    public void unsubscribeTag(long userNodeId, String tag) {
         unsubscribe(userNodeId, tag);
     }
 
     @Override
-    public void unsubscribeUser(int userNodeId, int subscribedUserId) {
+    public void unsubscribeUser(long userNodeId, long subscribedUserId) {
         unsubscribe(userNodeId,"user_"+subscribedUserId+"@"+this.domainName);
     }
 
@@ -134,7 +134,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     }
 
     @Override
-    public void publishMessageToUserNode(int userId, String message) {
+    public void publishMessageToUserNode(long userId, String message) {
         publishMessage("user_"+userId, message);
     }
 }
