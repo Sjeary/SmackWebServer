@@ -2,9 +2,20 @@ package org.example.smackwebserver.service;
 
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
+// 连接Openfire服务器
 public interface XMPPConnectionService {
-    XMPPTCPConnection connect(String username, String password);
+    String getUserName(long userId);
 
-    public void disconnect();
+    String getTagName(int tagId);
 
+    boolean isUserExists(long userId);
+
+    // 自动连接
+    XMPPTCPConnection getConnection(long userId);
+
+    XMPPTCPConnection connect(long userId);
+
+    void disconnect();
+
+    boolean register(long userId);
 }

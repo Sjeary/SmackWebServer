@@ -2,16 +2,15 @@ package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.service.XMPPConnectionService;
 import org.jivesoftware.smack.XMPPConnection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+// 仅测试用，非正式接口
 @RestController
-@RequestMapping("/xmpp")
+@RequestMapping("api/v1/xmpp")
 public class XMPPConnectionController {
 
     private final XMPPConnectionService connectionService;
 
-    @Autowired
     public XMPPConnectionController(XMPPConnectionService connectionService) {
         this.connectionService = connectionService;
     }
@@ -21,9 +20,9 @@ public class XMPPConnectionController {
      * @return 连接状态
      */
     @GetMapping("/connect")
-    public String testConnection() {
+    public String testConnection(@RequestParam long userId) {
         try {
-            XMPPConnection connection = connectionService.connect("admin", "BIT@1138");
+            XMPPConnection connection = connectionService.connect(userId);
             if (connection.isConnected()) {
                 return "Successfully connected to XMPP server!";
             } else {
@@ -33,23 +32,6 @@ public class XMPPConnectionController {
             return "Error occurred while connecting to XMPP server: " + e.getMessage();
         }
     }
-
-//    /**
-//     * 登录到 XMPP 服务器
-//     * @param username 用户名
-//     * @param password 密码
-//     * @return 登录状态
-//     */
-//    @PostMapping("/login")
-//    public String login(@RequestParam String username, @RequestParam String password) {
-//        try {
-//            connectionService.login(username, password);
-//            return "Logged in successfully as " + username;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "Login failed: " + e.getMessage();
-//        }
-//    }
 
     /**
      * 断开 XMPP 连接
@@ -62,6 +44,20 @@ public class XMPPConnectionController {
             return "Disconnected from XMPP server.";
         } catch (Exception e) {
             return "Failed to disconnect: " + e.getMessage();
+        }
+    }
+
+    /**
+     * 注册 XMPP 用户
+     * @return 注册状态
+     */
+    @PostMapping("/register")
+    public String registerUser(@RequestParam long userId) {
+        boolean result = connectionService.register(userId);
+        if (result) {
+            return "User registered successfully!";
+        } else {
+            return "Failed to register user.";
         }
     }
 }
