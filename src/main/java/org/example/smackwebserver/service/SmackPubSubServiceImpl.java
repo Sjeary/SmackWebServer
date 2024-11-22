@@ -1,5 +1,6 @@
 package org.example.smackwebserver.service;
 
+import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.pubsub.*;
@@ -24,7 +25,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     private String adminName;
     @Value("${openfire.admin_password}")
     private String adminPassword;
-    private String domainName = "pubsub.sjeary";
+    private String domainName = "sjeary";
 
     private PubSubManager pubSubManager;
     private XMPPTCPConnection connection;
@@ -32,16 +33,21 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     private Logger logger = LoggerFactory.getLogger(SmackPubSubServiceImpl.class);
 
     public SmackPubSubServiceImpl() throws Exception {
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+        try{XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setHost("43.143.213.221")
-                .setXmppDomain("pubsub.sjeary")
+                .setXmppDomain("sjeary")
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
                 .setUsernameAndPassword(this.adminName, this.adminPassword)
                 .build();
-        this.connection = new XMPPTCPConnection(config);
-        this.connection.connect();
-        this.connection.login();
+            this.connection = new XMPPTCPConnection(config);
+            this.connection.connect();
+            this.connection.login();
 
-        this.pubSubManager = PubSubManager.getInstanceFor(this.connection);
+            this.pubSubManager = PubSubManager.getInstanceFor(this.connection);}
+        catch (Exception e) {
+            logger.error("Construct error: {}", e.getMessage());
+        }
+
     }
 
     @Override
