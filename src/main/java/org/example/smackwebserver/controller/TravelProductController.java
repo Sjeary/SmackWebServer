@@ -45,7 +45,7 @@ public class TravelProductController {
         try {
             Long productId = travelProductService.createTravelProduct(travelProduct);
             TravelProduct product = travelProductService.getTravelProductById(productId);
-            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "发布旅游产品：");
+            Dynamic dynamic = dynamicService.createDynamic(product, "发布旅游产品：");
             for (Tag tag : dynamic.getTags()) {
                 String message = String.format("订阅的 %s 有新动态发布：%s", tag.getName(), dynamic.getTitle());
                 pubSubService.publishMessageToTagNode(tag.getName(), message);
@@ -69,7 +69,7 @@ public class TravelProductController {
             travelProduct.setId((int) id); // 确保更新的产品 ID 是正确的
             Long updatedId = travelProductService.updateTravelProduct(travelProduct);
             TravelProduct product = travelProductService.getTravelProductById(updatedId);
-            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "更新旅游产品：");
+            Dynamic dynamic = dynamicService.createDynamic(product, "更新旅游产品：");
             for (Tag tag : dynamic.getTags()) {
                 String message = String.format("订阅的 %s 有新动态更新：%s", tag.getName(), dynamic.getTitle());
                 pubSubService.publishMessageToTagNode(tag.getName(), message);
