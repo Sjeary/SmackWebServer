@@ -41,6 +41,7 @@ public class DynamicController {
     public Response<Dynamic> createDynamic(@RequestBody Dynamic dynamic, @RequestParam List<String> tags) {
         try {
             Dynamic new_dynamic = dynamicService.createDynamic(dynamic, tags);
+            pubSubService.afterPropertiesSet();
             for (Tag tag : new_dynamic.getTags()) {
                 String message = String.format("订阅的 %s 有新动态发布：%s", tag.getName(), new_dynamic.getTitle());
                 pubSubService.publishMessageToTagNode(tag.getName(), message);
@@ -64,6 +65,7 @@ public class DynamicController {
         try {
             dynamic.setId((int) id); // 确保更新的动态 ID 是正确的
             Dynamic new_dynamic = dynamicService.updateDynamic(dynamic, tags);
+            pubSubService.afterPropertiesSet();
             for (Tag tag : new_dynamic.getTags()) {
                 String message = String.format("订阅的 %s 有新动态更新：%s", tag.getName(), new_dynamic.getTitle());
                 pubSubService.publishMessageToTagNode(tag.getName(), message);
