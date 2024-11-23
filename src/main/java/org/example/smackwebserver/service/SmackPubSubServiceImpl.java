@@ -1,19 +1,24 @@
 package org.example.smackwebserver.service;
 
+import org.example.smackwebserver.dao.PubMessage;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.pubsub.*;
+import org.jivesoftware.smackx.pubsub.listener.ItemEventListener;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SmackPubSubServiceImpl implements SmackPubSubService {
+public class SmackPubSubServiceImpl implements SmackPubSubService, InitializingBean {
     @Autowired
     private UserService userService;
 
@@ -28,32 +33,56 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
     private String domainName = "sjeary";
 
     private PubSubManager pubSubManager;
-    private XMPPTCPConnection connection;
+    private XMPPTCPConnection adminConnection;
 
     private Logger logger = LoggerFactory.getLogger(SmackPubSubServiceImpl.class);
 
-    public SmackPubSubServiceImpl() throws Exception {
-        try{XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setHost("43.143.213.221")
-                .setXmppDomain("sjeary")
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
-                .setUsernameAndPassword(this.adminName, this.adminPassword)
-                .build();
-            this.connection = new XMPPTCPConnection(config);
-            this.connection.connect();
-            this.connection.login();
+    @Override
+    public void afterPropertiesSet() {
+        try{
+            XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+                    .setHost("43.143.213.221")
+                    .setXmppDomain("sjeary")
+                    .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
+                    .setUsernameAndPassword(this.adminName, this.adminPassword)
+                    .build();
+            System.out.println("[PubSubManager Config] adminName: " + adminName +" adminPassword: " + adminPassword);
+            this.adminConnection = new XMPPTCPConnection(config);
+            this.adminConnection.connect();
+            this.adminConnection.login();
 
-            this.pubSubManager = PubSubManager.getInstanceFor(this.connection);}
+            this.pubSubManager = PubSubManager.getInstanceFor(this.adminConnection);}
         catch (Exception e) {
             logger.error("Construct error: {}", e.getMessage());
         }
-
     }
 
     @Override
     public void createUserNode(int userId) {
         try {
-            pubSubManager.createNode("user_"+userId);
+            String nodeId = "user_"+userId;
+            LeafNode node = pubSubManager.createNode(nodeId);
+            Jid adminJid = JidCreate.entityBareFrom(adminName+"@"+domainName);
+            Jid userJid = JidCreate.entityBareFrom("web_user_"+userId+"@"+domainName);
+            node.addItemEventListener(new ItemEventListener<>() {
+                @Override
+                public void handlePublishedItems(ItemPublishEvent itemPublishEvent) {
+                    for(Object item: itemPublishEvent.getItems()) {
+                        if(item instanceof PubMessage) {
+                            Message message = MessageBuilder.buildMessage()
+                                    .from(adminJid)
+                                    .to(userJid)
+                                    .setBody(((PubMessage) item).getMessage())
+                                    .build();
+                            try {
+                                adminConnection.sendStanza(message);
+                            } catch (Exception e) {
+                                logger.error("cannot send pubmessage from user node to user account: "+e.getMessage());
+                            }
+                        }
+                    }
+                }
+            });
         } catch (Exception e) {
             logger.error("cann't create user node:"+e.getMessage());
         }
@@ -71,9 +100,25 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
         }
     }
 
+    private void createTagNode(String tag) {
+        LeafNode node;
+        try {
+            node = pubSubManager.getLeafNode("tag_"+tag);
+        } catch (PubSubException.NotAPubSubNodeException e) {
+            try {
+                node = pubSubManager.createNode("user_"+tag);
+            } catch(Exception e1) {
+                logger.error("create tag node failed: "+e1.getMessage());
+                return;
+            }
+        } catch (Exception e){
+            logger.error("getTagNode error."+e.getMessage());
+        }
+    }
+
     @Override
     public void subscribeTag(int userNodeId, String tag) {
-        this.subscribe(userNodeId, tag);
+        this.subscribe(userNodeId, "tag_"+tag);
     }
 
     @Override
@@ -82,7 +127,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
             logger.error("user does not exist: ",+subscribedUserId);
             return;
         }
-        this.subscribe(userNodeId, "user_"+subscribedUserId+"@"+this.domainName);
+        this.subscribe(userNodeId, "user_"+subscribedUserId);
     }
 
     @Override
@@ -95,7 +140,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
             return;
         }
         try {
-            node.unsubscribe("user_"+userNodeId+"@"+this.domainName);
+            node.unsubscribe("user_"+userNodeId);
         } catch (Exception e) {
             logger.error("unsubscribe error: cannot unsubscribe from the node: "+e.getMessage());
         }
@@ -103,12 +148,12 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
 
     @Override
     public void unsubscribeTag(int userNodeId, String tag) {
-        unsubscribe(userNodeId, tag);
+        unsubscribe(userNodeId, "tag_"+tag);
     }
 
     @Override
     public void unsubscribeUser(int userNodeId, int subscribedUserId) {
-        unsubscribe(userNodeId,"user_"+subscribedUserId+"@"+this.domainName);
+        unsubscribe(userNodeId,"user_"+subscribedUserId);
     }
 
     @Override
@@ -121,7 +166,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
             return;
         }
         try{
-            Item item = new Item(message);
+            Item item = new PubMessage(nodeId, message);
             node.publish(item);
         } catch(Exception e){
             logger.error("publishMessage error: cannot publish message: "+e.getMessage());
@@ -130,11 +175,11 @@ public class SmackPubSubServiceImpl implements SmackPubSubService {
 
     @Override
     public void publishMessageToTagNode(String tag, String message) {
-        publishMessage("tag_"+tag, message);
+        publishMessage("tag_"+tag, "[pub message] A pub message for tag node: "+message);
     }
 
     @Override
     public void publishMessageToUserNode(int userId, String message) {
-        publishMessage("user_"+userId, message);
+        publishMessage("user_"+userId, "[pub message] A pub message for user node: "+message);
     }
 }
