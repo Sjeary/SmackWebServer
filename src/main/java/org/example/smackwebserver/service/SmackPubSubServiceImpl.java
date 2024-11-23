@@ -117,7 +117,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService, InitializingB
     }
 
     @Override
-    public void subscribeTag(int userNodeId, String tag) {
+    public void subscribeTag(long userNodeId, String tag) {
         this.subscribe(userNodeId, "tag_"+tag);
     }
 
