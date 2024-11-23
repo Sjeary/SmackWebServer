@@ -1,6 +1,8 @@
 package org.example.smackwebserver.service;
 
 public interface SmackPubSubService {
+    void afterPropertiesSet();
+
     void createUserNode(long userId);
 
     public void subscribe(long userNodeId, String subscribedNodeId);

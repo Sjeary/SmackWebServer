@@ -41,8 +41,9 @@ public class SmackPubSubServiceImpl implements SmackPubSubService, InitializingB
     public void afterPropertiesSet() {
         try{
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                    .setHost("43.143.213.221")
-                    .setXmppDomain(this.domainName)
+                    .setHost(hostname)
+                    .setPort(Integer.parseInt(port))
+                    .setXmppDomain(domainName)
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
                     .setUsernameAndPassword(this.adminName, this.adminPassword)
                     .build();

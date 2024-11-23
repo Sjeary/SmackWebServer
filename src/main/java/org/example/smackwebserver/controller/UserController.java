@@ -56,6 +56,7 @@ public class UserController {
             LoginResponse loginResponse = new LoginResponse(fullUserInfo, token);
             // 同步登录Openfire
             xmppConnectionService.connect(fullUserInfo.getId());
+            pubSubService.afterPropertiesSet();
             pubSubService.createUserNode(fullUserInfo.getId());
             return Response.newSuccess(loginResponse);
         } else {
