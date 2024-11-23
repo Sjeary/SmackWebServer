@@ -16,6 +16,9 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.impl.JidCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ServerEndpoint("/websocket/{userId}")
 @Component
 public class WebSocket_Smack {
+    private MySmackConfiguration mySmackConfiguration;
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocket_Smack.class);
     public static AtomicInteger onlineCount = new AtomicInteger(0);
@@ -53,6 +57,7 @@ public class WebSocket_Smack {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") long userId) {  // OnOpen会有exception
+        this.mySmackConfiguration = new MySmackConfiguration();
         try {
             logger.debug("有新的websocket建立请求");
             if (userId == 0) {
@@ -71,20 +76,20 @@ public class WebSocket_Smack {
 
             // 配置 connection
             XMPPTCPConnectionConfiguration configSender = XMPPTCPConnectionConfiguration.builder()
-                    .setUsernameAndPassword(Long.toString(this.userId), "123456")
-                    .setXmppDomain("sjeary")
+                    .setUsernameAndPassword("web_user_"+this.userId, "password")
+                    .setXmppDomain(mySmackConfiguration.domainName)
                     .setResource("web") // 表示链接方式
-                    .setHost(MySmackConfiguration.hostname)
-                    .setPort(MySmackConfiguration.port)
+                    .setHost(mySmackConfiguration.hostname)
+                    .setPort(mySmackConfiguration.port)
                     .addEnabledSaslMechanism("PLAIN")
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
 
             XMPPTCPConnectionConfiguration configReceiver = XMPPTCPConnectionConfiguration.builder()
-                    .setUsernameAndPassword(Long.toString(this.userId), "123456")
-                    .setXmppDomain("sjeary")
-                    .setHost(MySmackConfiguration.hostname)
-                    .setPort(MySmackConfiguration.port)
+                    .setUsernameAndPassword("web_user_"+this.userId, "password")
+                    .setXmppDomain(mySmackConfiguration.domainName)
+                    .setHost(mySmackConfiguration.hostname)
+                    .setPort(mySmackConfiguration.port)
                     .addEnabledSaslMechanism("PLAIN")
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
@@ -94,26 +99,27 @@ public class WebSocket_Smack {
 
             // 初始化、启动、登录 connection
             try {
+                logger.debug("尝试建立链接");
                 connectionSender.connect();
                 connectionReceiver.connect();
                 connectionSender.login();
                 connectionReceiver.login();
+                logger.debug("链接建立成功，登录成功");
 
                 connectionReceiver.addAsyncStanzaListener(new StanzaListener() {
                     @Override
                     public void processStanza(Stanza packet) throws SmackException.NotConnectedException, InterruptedException, SmackException.NotLoggedInException {
                         if(packet instanceof Message) {
                             Message message = (Message) packet;
-                            UserMessage userMessage = new UserMessage();
-                            if (message.getFrom() != null && message.getFrom().getLocalpartOrNull() != null) {
-                                userMessage.setSenderId(Long.parseLong(message.getFrom().getLocalpartOrNull().toString()));
+                            if(message.getFrom() != null && message.getFrom().getLocalpartOrNull() != null && message.getFrom().getLocalpartOrNull().toString().startsWith("web_user_")
+                                    && message.getTo() != null && message.getTo().getLocalpartOrNull() != null && message.getTo().getLocalpartOrNull().toString().startsWith("web_user_")) {  // 判断是否为用户之间发送的消息。
+                                UserMessage userMessage = new UserMessage();
+                                userMessage.setSenderId(Long.parseLong(message.getFrom().getLocalpartOrNull().toString().substring(8)));
+                                userMessage.setReceiverId(Long.parseLong(message.getTo().getLocalpartOrNull().toString().substring(8))); // 将web_user_前缀去掉
+                                userMessage.setContent(message.getBody());
+                                userMessage.setDate(new Date());
+                                sendMessage(UserMessage.serializeUserMessage(userMessage));
                             }
-                            if (message.getTo() != null && message.getTo().getLocalpartOrNull() != null) {
-                                userMessage.setReceiverId(Long.parseLong(message.getTo().getLocalpartOrNull().toString()));
-                            }
-                            userMessage.setContent(message.getBody());
-                            userMessage.setDate(new Date());
-                            sendMessage(UserMessage.serializeUserMessage(userMessage));
                         }
                     }
                 }, MessageWithBodiesFilter.INSTANCE);
@@ -164,7 +170,7 @@ public class WebSocket_Smack {
 
         try {
             Message stanzaMessage = MessageBuilder.buildMessage()
-                    .to(JidCreate.entityBareFrom(Long.toString(userMessage.getReceiverId())+"@"+MySmackConfiguration.domainName+"/web"))
+                    .to(JidCreate.entityBareFrom("web_user_"+Long.toString(userMessage.getReceiverId())+"@"+mySmackConfiguration.domainName+"/web"))
                     .from(connectionSender.getUser())
                     .setBody(userMessage.getContent())
                     .build();

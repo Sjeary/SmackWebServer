@@ -3,10 +3,9 @@ package org.example.smackwebserver.controller;
 import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.Dynamic;
 import org.example.smackwebserver.dao.ProductComment;
+import org.example.smackwebserver.dao.Tag;
 import org.example.smackwebserver.dao.TravelProduct;
-import org.example.smackwebserver.service.CommentService;
-import org.example.smackwebserver.service.DynamicService;
-import org.example.smackwebserver.service.TravelProductService;
+import org.example.smackwebserver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +24,10 @@ public class TravelProductController {
     private CommentService<ProductComment> commentService;
     @Autowired
     private DynamicService dynamicService;
+    @Autowired
+    private SmackPubSubService pubSubService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/api/v1/TravelProduct/{id}")
     public Response<TravelProduct> getTravelProduct(@PathVariable("id") long id) {
@@ -42,7 +45,13 @@ public class TravelProductController {
         try {
             Long productId = travelProductService.createTravelProduct(travelProduct);
             TravelProduct product = travelProductService.getTravelProductById(productId);
-            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "发布旅游产品：");
+            Dynamic dynamic = dynamicService.createDynamic(product, "发布旅游产品：");
+            for (Tag tag : dynamic.getTags()) {
+                String message = String.format("订阅的 %s 有新动态发布：%s", tag.getName(), dynamic.getTitle());
+                pubSubService.publishMessageToTagNode(tag.getName(), message);
+            }
+            String message = String.format("关注的 %s 有新动态发布：%s", userService.getUserById(dynamic.getUserId()).getName(), dynamic.getTitle());
+            pubSubService.publishMessageToUserNode(dynamic.getUserId(), message);
             return Response.newSuccess(productId);
         } catch (IllegalArgumentException e) {
             // 捕获服务层抛出的异常并返回失败响应
@@ -60,7 +69,13 @@ public class TravelProductController {
             travelProduct.setId((int) id); // 确保更新的产品 ID 是正确的
             Long updatedId = travelProductService.updateTravelProduct(travelProduct);
             TravelProduct product = travelProductService.getTravelProductById(updatedId);
-            Dynamic dynamic = dynamicService.createDynamic(travelProduct, "更新旅游产品：");
+            Dynamic dynamic = dynamicService.createDynamic(product, "更新旅游产品：");
+            for (Tag tag : dynamic.getTags()) {
+                String message = String.format("订阅的 %s 有新动态更新：%s", tag.getName(), dynamic.getTitle());
+                pubSubService.publishMessageToTagNode(tag.getName(), message);
+            }
+            String message = String.format("关注的 %s 有新动态更新：%s", userService.getUserById(dynamic.getUserId()).getName(), dynamic.getTitle());
+            pubSubService.publishMessageToUserNode(dynamic.getUserId(), message);
             return Response.newSuccess(updatedId);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
