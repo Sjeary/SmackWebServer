@@ -19,4 +19,8 @@ public interface TravelProductService {
     Map<String, Object> searchTravelProducts(Integer userId, String productType, String theme, String departureLocation, String destination, int page, int size);
 
     Page<TravelProduct> searchProductsByKeyword(String keyword, Pageable pageable);
+
+    Map<String, Object> searchTravelProductsWithKeyword(Integer userId, String productType, String theme,
+                                                        String departureLocation, String destination,
+                                                        String keyword, int page, int size);
 }

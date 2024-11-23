@@ -169,5 +169,24 @@ public class TravelProductServiceImpl implements TravelProductService {
     public Page<TravelProduct> searchProductsByKeyword(String keyword, Pageable pageable) {
         return travelProductRepository.searchByKeyword(keyword, pageable);
     }
+
+    @Override
+    public Map<String, Object> searchTravelProductsWithKeyword(Integer userId, String productType, String theme,
+                                                               String departureLocation, String destination,
+                                                               String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // 调用组合查询方法
+        Page<TravelProduct> productPage = travelProductRepository.searchByConditionsAndKeyword(
+                userId, productType, theme, departureLocation, destination, keyword, pageable);
+
+        // 将数据与总记录数封装为 Map 返回
+        Map<String, Object> result = new HashMap<>();
+        result.put("total_item", productPage.getTotalElements()); // 总记录数
+        result.put("data", productPage.getContent()); // 当前页的数据
+
+        return result;
+    }
+
 }
 

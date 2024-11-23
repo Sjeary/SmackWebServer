@@ -129,6 +129,25 @@ public class TravelProductController {
             return Response.newFail("Failed to search travel products: " + e.getMessage());
         }
     }
+    @GetMapping("/api/v1/TravelProduct/search_new")
+    public Response<Map<String, Object>> searchTravelProductsWithKeyword(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String productType,
+            @RequestParam(required = false) String theme,
+            @RequestParam(required = false) String departureLocation,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Map<String, Object> result = travelProductService.searchTravelProductsWithKeyword(
+                    userId, productType, theme, departureLocation, destination, keyword, page, size);
+            return Response.newSuccess(result);
+        } catch (Exception e) {
+            return Response.newFail("Failed to search travel products: " + e.getMessage());
+        }
+    }
+
 
     // 获取评论，一定要显式传入实体类！
     @GetMapping("/api/v1/TravelProduct/{id}/Comments")
