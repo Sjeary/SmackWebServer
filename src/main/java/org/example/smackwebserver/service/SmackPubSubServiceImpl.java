@@ -30,7 +30,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService, InitializingB
     private String adminName;
     @Value("${openfire.admin_password}")
     private String adminPassword;
-    private String domainName = "sjeary";
+    private String domainName = "localhost";
 
     private PubSubManager pubSubManager;
     private XMPPTCPConnection adminConnection;
@@ -42,7 +42,7 @@ public class SmackPubSubServiceImpl implements SmackPubSubService, InitializingB
         try{
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                     .setHost("43.143.213.221")
-                    .setXmppDomain("sjeary")
+                    .setXmppDomain(this.domainName)
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled) // 禁用 TLS 验证，生产环境不能用！
                     .setUsernameAndPassword(this.adminName, this.adminPassword)
                     .build();
