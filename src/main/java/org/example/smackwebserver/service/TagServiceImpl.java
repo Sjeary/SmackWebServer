@@ -5,11 +5,11 @@ import org.example.smackwebserver.dao.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -43,6 +43,12 @@ public class TagServiceImpl implements TagService {
         result.put("data", productPage.getContent()); // 当前页的数据
 
         return result;
+    }
+
+    @Override
+    public Tag getTagById(long id) {
+        return tagRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("Tag with id " + id + " not found"));
     }
 
 }

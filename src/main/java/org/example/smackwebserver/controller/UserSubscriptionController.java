@@ -2,7 +2,10 @@ package org.example.smackwebserver.controller;
 
 import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.UserSubscription;
+import org.example.smackwebserver.service.SmackPubSubService;
+import org.example.smackwebserver.service.UserService;
 import org.example.smackwebserver.service.UserSubscriptionService;
+import org.example.smackwebserver.service.XMPPConnectionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,15 +15,21 @@ import java.util.List;
 public class UserSubscriptionController {
 
     private final UserSubscriptionService userSubscriptionService;
+    private final XMPPConnectionService xmppConnectionService;
+    private final SmackPubSubService pubSubService;
 
-    public UserSubscriptionController(UserSubscriptionService userSubscriptionService) {
+    public UserSubscriptionController(UserSubscriptionService userSubscriptionService, XMPPConnectionService xmppConnectionService, SmackPubSubService pubSubService) {
         this.userSubscriptionService = userSubscriptionService;
+        this.xmppConnectionService = xmppConnectionService;
+        this.pubSubService = pubSubService;
     }
 
     @PostMapping("/{userIdFrom}/{userIdTo}")
     public Response<UserSubscription> addSubscription(@PathVariable Long userIdFrom, @PathVariable Long userIdTo) {
         try {
             UserSubscription subscription = userSubscriptionService.addSubscription(userIdFrom, userIdTo);
+            xmppConnectionService.getConnection(userIdFrom);
+            pubSubService.subscribeUser(userIdFrom, userIdTo);
             return Response.newSuccess(subscription);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -31,6 +40,8 @@ public class UserSubscriptionController {
     public Response<String> removeSubscription(@PathVariable Long userIdFrom, @PathVariable Long userIdTo) {
         try {
             userSubscriptionService.removeSubscription(userIdFrom, userIdTo);
+            xmppConnectionService.getConnection(userIdFrom);
+            pubSubService.unsubscribeUser(userIdFrom, userIdTo);
             return Response.newSuccess("Subscription removed successfully.");
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());

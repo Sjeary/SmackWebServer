@@ -4,8 +4,8 @@ import org.example.smackwebserver.Response;
 import org.example.smackwebserver.dao.*;
 import org.example.smackwebserver.service.CommentService;
 import org.example.smackwebserver.service.DynamicService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.example.smackwebserver.service.SmackPubSubService;
+import org.example.smackwebserver.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,16 +14,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class DynamicController {
-    @Autowired
-    private CommentService<DynamicComment> commentService;
-    @Autowired
-    private DynamicService dynamicService;
-    @Autowired
-    private CommentService<DynamicComment> dynamicCommentService;
-    @Autowired
-    private CommentService<SpotComment> spotCommentService;
-    @Autowired
-    private CommentService<ProductComment> productCommentService;
+    private final DynamicService dynamicService;
+    private final CommentService<DynamicComment> commentService;
+    private final SmackPubSubService pubSubService;
+    private final UserService userService;
+
+    public DynamicController(DynamicService dynamicService, CommentService<DynamicComment> commentService, SmackPubSubService pubSubService, UserService userService) {
+        this.dynamicService = dynamicService;
+        this.commentService = commentService;
+        this.pubSubService = pubSubService;
+        this.userService = userService;
+    }
 
     @GetMapping("/Dynamic/{id}")
     public Response<Dynamic> getDynamic(@PathVariable long id) {
@@ -40,6 +41,12 @@ public class DynamicController {
     public Response<Dynamic> createDynamic(@RequestBody Dynamic dynamic, @RequestParam List<String> tags) {
         try {
             Dynamic new_dynamic = dynamicService.createDynamic(dynamic, tags);
+            for (Tag tag : new_dynamic.getTags()) {
+                String message = String.format("订阅的 %s 有新动态发布：%s", tag.getName(), new_dynamic.getTitle());
+                pubSubService.publishMessageToTagNode(tag.getName(), message);
+            }
+            String message = String.format("关注的 %s 有新动态发布：%s", userService.getUserById(new_dynamic.getUserId()).getName(), new_dynamic.getTitle());
+            pubSubService.publishMessageToUserNode(dynamic.getUserId(), message);
             return Response.newSuccess(new_dynamic);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -57,6 +64,12 @@ public class DynamicController {
         try {
             dynamic.setId((int) id); // 确保更新的动态 ID 是正确的
             Dynamic new_dynamic = dynamicService.updateDynamic(dynamic, tags);
+            for (Tag tag : new_dynamic.getTags()) {
+                String message = String.format("订阅的 %s 有新动态更新：%s", tag.getName(), new_dynamic.getTitle());
+                pubSubService.publishMessageToTagNode(tag.getName(), message);
+            }
+            String message = String.format("关注的 %s 有新动态更新：%s", userService.getUserById(new_dynamic.getUserId()).getName(), new_dynamic.getTitle());
+            pubSubService.publishMessageToUserNode(dynamic.getUserId(), message);
             return Response.newSuccess(new_dynamic);
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
@@ -96,25 +109,7 @@ public class DynamicController {
     public Response<List<DynamicComment>> getDynamicComments(
             @PathVariable int id) {
         try {
-            return Response.newSuccess(dynamicCommentService.getNestedComments(id, DynamicComment.class));
-        } catch (IllegalArgumentException e) {
-            return Response.newFail(e.getMessage());
-        }
-    }
-    @GetMapping("/Spot/{id}/Comments")
-    public Response<List<SpotComment>> getSpotComments(
-            @PathVariable int id) {
-        try {
-            return Response.newSuccess(spotCommentService.getNestedComments(id, SpotComment.class));
-        } catch (IllegalArgumentException e) {
-            return Response.newFail(e.getMessage());
-        }
-    }
-    @GetMapping("/Product/{id}/Comments")
-    public Response<List<ProductComment>> getProductComments(
-            @PathVariable int id) {
-        try {
-            return Response.newSuccess(productCommentService.getNestedComments(id, ProductComment.class));
+            return Response.newSuccess(commentService.getNestedComments(id, DynamicComment.class));
         } catch (IllegalArgumentException e) {
             return Response.newFail(e.getMessage());
         }
