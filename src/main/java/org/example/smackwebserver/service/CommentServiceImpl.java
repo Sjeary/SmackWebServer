@@ -26,6 +26,7 @@ public class CommentServiceImpl<T extends Comment> implements CommentService<T> 
         return topLevelComments;
     }
 
+    @Override
     public T createComment(int parentId, T comment, Class<T> type) {
         // 评论内容
         if (comment.getContent() == null || comment.getContent().trim().isEmpty()) {
@@ -52,6 +53,7 @@ public class CommentServiceImpl<T extends Comment> implements CommentService<T> 
         return commentRepository.save(comment, type);
     }
 
+    @Override
     public void deleteComments(int parentId, Class<T> type) {
         commentRepository.deleteByParentId(parentId, type);
     }
