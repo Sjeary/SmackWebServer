@@ -87,11 +87,6 @@ public class DynamicServiceImpl implements DynamicService {
 
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
-            if (tag == null) {
-                tag = new Tag();
-                tag.setName(tagName);
-                tagRepository.save(tag);
-            }
             dynamic.getTags().add(tag);
         }
 
@@ -121,11 +116,6 @@ public class DynamicServiceImpl implements DynamicService {
         existingDynamic.getTags().clear();
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
-            if (tag == null) {
-                tag = new Tag();
-                tag.setName(tagName);
-                tagRepository.save(tag);
-            }
             existingDynamic.getTags().add(tag);
         }
 

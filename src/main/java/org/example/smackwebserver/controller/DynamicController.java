@@ -102,7 +102,7 @@ public class DynamicController {
             Map<String, Object> result = dynamicService.searchDynamicsByUserId(id, page, size);
             return Response.newSuccess(result);
         } catch (Exception e) {
-            return Response.newFail("Failed to search travel products: " + e.getMessage());
+            return Response.newFail("Failed to get dynamics of user " + id + ": " + e.getMessage());
         }
     }
 
