@@ -55,11 +55,6 @@ public class DynamicServiceImpl implements DynamicService {
 
         for (String tagName : tagNames) {
             Tag tag = tagRepository.findByName(tagName);
-            if (tag == null) {
-                tag = new Tag();
-                tag.setName(tagName);
-                tagRepository.save(tag);
-            }
             dynamic.getTags().add(tag);
         }
 
@@ -79,16 +74,16 @@ public class DynamicServiceImpl implements DynamicService {
         dynamic.setIssuedAt(LocalDateTime.now());
         dynamic.setUpdatedAt(LocalDateTime.now());
 
-        // 把旅游产品的出发地、目的地、主题设为Tag
-        List<String> tagNames = new ArrayList<>();
-        tagNames.add(travelProduct.getDepartureLocation());
-        tagNames.add(travelProduct.getDestination());
-        tagNames.add(travelProduct.getTheme());
-
-        for (String tagName : tagNames) {
-            Tag tag = tagRepository.findByName(tagName);
-            dynamic.getTags().add(tag);
-        }
+//        // 把旅游产品的出发地、目的地、主题设为Tag
+//        List<String> tagNames = new ArrayList<>();
+//        tagNames.add(travelProduct.getDepartureLocation());
+//        tagNames.add(travelProduct.getDestination());
+//        tagNames.add(travelProduct.getTheme());
+//
+//        for (String tagName : tagNames) {
+//            Tag tag = tagRepository.findByName(tagName);
+//            dynamic.getTags().add(tag);
+//        }
 
         return dynamicRepository.save(dynamic);
     }
