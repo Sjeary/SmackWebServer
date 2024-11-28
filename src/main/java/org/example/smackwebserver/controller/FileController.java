@@ -55,11 +55,11 @@ public class FileController {
     }
 
     // 文件下载接口
-    @GetMapping("/files/{fileName}")
+    @GetMapping("/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws MalformedURLException {
         // 获取文件存储路径
         Path filePath = Paths.get(fileStoragePath).resolve(fileName);
-
+        System.out.println(filePath);
         // 获取文件资源
         Resource resource = new UrlResource(filePath.toUri());
 

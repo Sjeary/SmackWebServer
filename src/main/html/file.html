@@ -6,7 +6,7 @@
 
 <script>
   // 假设 WebSocket 已经建立
-  var socket = new WebSocket('ws://localhost:8080/websocket');
+  var socket = new WebSocket('ws://localhost:8080/websocket/1');
 
   // 接收消息并显示
   socket.onmessage = function(event) {
@@ -51,7 +51,7 @@
                 };
 
                 socket.send(JSON.stringify(fileMessage));
-                console.log("file: "+fileMessage);
+                console.log("file: ",fileMessage);
               })
               .catch(error => {
                 console.error('Error uploading file:', error);
