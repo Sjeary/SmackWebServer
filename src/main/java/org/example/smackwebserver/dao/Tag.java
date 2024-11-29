@@ -19,6 +19,12 @@ public class Tag {
     @Column(name = "name", nullable = false, length = 100, unique = true)
     private String name; // tag/节点名称
 
+    @Column(name = "user_id", nullable = false)
+    private long userId; // tag/节点管理员
+
+    @Column(name = "description", nullable = false)
+    private String description; //tag/节点介绍
+
     public int getId() {
         return id;
     }
@@ -33,6 +39,22 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)

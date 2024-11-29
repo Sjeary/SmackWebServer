@@ -1,0 +1,63 @@
+<div id="chat">
+  <ul id="messages"></ul>
+  <input type="file" id="fileInput" />
+  <button onclick="sendFile()">Send File</button>
+</div>
+
+<script>
+  // 假设 WebSocket 已经建立
+  var socket = new WebSocket('ws://localhost:8080/websocket/1');
+
+  // 接收消息并显示
+  socket.onmessage = function(event) {
+    const message = JSON.parse(event.data);
+    const messages = document.getElementById('messages');
+
+    if (message.messageType === "file") {
+      const fileMessage = document.createElement('li');
+      fileMessage.innerHTML = `
+        <a href="${message.fileUrl}" target="_blank">${message.fileName}</a>
+        <span>(${message.fileSize} bytes)</span>
+      `;
+      messages.appendChild(fileMessage);
+    }
+  };
+
+  // 发送文件
+  function sendFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('http://localhost:8080/api/v1/files/upload', {
+        method: 'POST',
+        body: formData  // 不需要手动设置 Content-Type，浏览器会自动处理
+      })
+              .then(response => response.json())
+              .then(data => {
+                console.log('File uploaded:', data);
+                // 发送文件消息到 WebSocket
+                const fileMessage = {
+                  senderId: 1,
+                  receiverId: 2,
+                  messageType: 'file',
+                  fileUrl: data.fileUrl,
+                  fileName: file.name,
+                  fileSize: file.size,
+                  fileType: file.type
+                };
+
+                socket.send(JSON.stringify(fileMessage));
+                console.log("file: ",fileMessage);
+              })
+              .catch(error => {
+                console.error('Error uploading file:', error);
+              });
+    }
+  }
+
+
+</script>
